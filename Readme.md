@@ -9,7 +9,7 @@ This modules provides a loop which return the best (or the worst) sales.
 Manually, or with composer :
 
 ```
-composer require thelia/best-sellers-module:~1.0
+composer require thelia/best-sellers-module:~2.0
 ```
 
 ## Usage
@@ -93,7 +93,7 @@ Ce module vous fournit une boucle qui retourne vos meilleures (ou vos pires) ven
 Manuellement, ou avec composer :
 
 ```
-composer require thelia/best-sellers-module:~1.0
+composer require thelia/best-sellers-module:~2.0
 ```
 
 ## Usage
