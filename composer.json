@@ -1,5 +1,5 @@
 {
-  "name": "cqfdev/best-sellers-module",
+  "name": "thelia/best-sellers-module",
   "license": "LGPL-3.0-or-later",
   "type": "thelia-module",
   "require": {
