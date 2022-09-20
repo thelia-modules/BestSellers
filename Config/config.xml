@@ -6,6 +6,7 @@
 
     <loops>
         <loop name="best_selling_products" class="BestSellers\Loop\BestSellerLoop" />
+        <loop name="purchased_with_products" class="BestSellers\Loop\PurchasedWithLoop" />
     </loops>
 
     <services>
@@ -19,6 +20,9 @@
         <hook id="best_sellers.hook.back" class="BestSellers\Hook\HookManager">
             <tag name="hook.event_listener" event="main.top-menu-tools" type="back" method="onMainTopMenuTools" />
             <tag name="hook.event_listener" event="product.modification.form-right.bottom" type="back" templates="render:product-edit.html" />
+
+            <tag name="hook.event_listener" event="product.bottom" type="front" method="onProductBottom" />
+            <tag name="hook.event_listener" event="product.additional" type="front" method="onProductAdditional" />
         </hook>
 
         <hook id="best_sellers.hook.front">

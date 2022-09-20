@@ -1,0 +1,29 @@
+{$maxProducts = 4}
+{$productCount = 0}
+{$exclude_list = $product_id}
+{$padWithRandomProducts = true}
+
+<div class="px-8 pt-12 pb-32">
+    <div class="container mx-auto">
+        <section class="ProductAccessories">
+            {include file="components/smarty/Title/Title.html" type="h2" title={intl d='bestsellser.fo.modern' l='Purchased with this product'}}
+
+            <div class="grid grid-cols-2 gap-8 lg:grid-cols-4">
+                {loop name="purchased-with" type="purchased_with_products" product_ref=$product_ref limit=$maxProducts order="sold_count_reverse"}
+                    {loop type="product" name="product_list" ref=$PRODUCT_REF}
+                        {include file="components/smarty/SingleProduct/SingleProduct.html" product_id=$ID}
+                        {$exclude_list = "{$exclude_list},$ID"}
+                        {$productCount = $productCount + 1}
+                    {/loop}
+                {/loop}
+
+                {if $padWithRandomProducts && $productCount < $maxProducts}
+                    {loop type="product" name="other-products" limit={$maxProducts - $productCount} category=$DEFAULT_CATEGORY order="random" exclude=$exclude_list}
+                        {include file="components/smarty/SingleProduct/SingleProduct.html" product_id=$ID}
+                    {/loop}
+                {/if}
+
+            </div>
+        </section>
+    </div>
+</div>
