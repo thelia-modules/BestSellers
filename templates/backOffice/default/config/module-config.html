@@ -27,8 +27,10 @@
                 <div class="form-group {if $error}has-error{/if} col-md-2 input-group">
 
                     {form_error form=$form field="order"}
-                    <br />
-                    <span class="error">{$message}</span>
+                    {if isset($message)}
+                        <br />
+                        <span class="error">{$message}</span>
+                    {/if}
                     {/form_error}
 
                     <input type="text" name="{$name}" class="form-control" value="{$value}" \>
@@ -116,8 +118,8 @@
                                 <div class="toolbar-options hidden">
                                     {loop type="auth" name="can_change" role="ADMIN" resource="admin.order-status" access="UPDATE"}
                                     <a title="{intl l='Edit this status' d='bestsellers.bo.default'}" href="{url path="/admin/configuration/order-status/update/%id" id=$ID}"><span class="glyphicon glyphicon-edit"></span></a>
-                                    {if !$DELETABLE}
-                                    <a class="order-status-cancel" title="{intl l='Delete this status' d='bestsellers.bo.default'}" href="#cancel_order-status_dialog" data-id="{$ID}" data-toggle="modal"><span class="glyphicon glyphicon-remove-sign"></span></a>
+                                    {if isset($DELETABLE)}
+                                        <a class="order-status-cancel" title="{intl l='Delete this status' d='bestsellers.bo.default'}" href="#cancel_order-status_dialog" data-id="{$ID}" data-toggle="modal"><span class="glyphicon glyphicon-remove-sign"></span></a>
                                     {/if}
                                     {/loop}
                                 </div>
