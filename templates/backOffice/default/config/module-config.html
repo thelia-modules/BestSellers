@@ -7,8 +7,8 @@
 
         <div class="form-container">
             <div class="col-md-12">
-                {form name = "bestsellers_configuration"}
-                <form method="POST" action="{url path="/admin/module/bestsellers/config"}" >
+                {form name="bestsellers_configuration"}
+                <form method="POST" action="{url path="/admin/module/bestsellers/config"}">
 
                 {form_hidden_fields form=$form}
                 {form_field form=$form field="success_url"}
@@ -23,24 +23,88 @@
                 </div>
                 {/if}
 
-                {form_field form=$form field="order"}
+                {form_field form=$form field="start_date"}
                 <div class="form-group {if $error}has-error{/if} col-md-2 input-group">
-
-                    {form_error form=$form field="order"}
+                    {form_error form=$form field="start_date"}
                     {if isset($message)}
-                        <br />
-                        <span class="error">{$message}</span>
+                    <br />
+                    <span class="error">{$message}</span>
                     {/if}
                     {/form_error}
+                    <input type="date" name="{$name}" class="form-control" value="{$value}" \>
+                </div>
+                {/form_field}
 
+                {form_field form=$form field="end_date"}
+                <div class="form-group {if $error}has-error{/if} col-md-2 input-group">
+                    {form_error form=$form field="end_date"}
+                    {if isset($message)}
+                    <br />
+                    <span class="error">{$message}</span>
+                    {/if}
+                    {/form_error}
+                    <input type="date" name="{$name}" class="form-control" value="{$value}" \>
+                </div>
+                {/form_field}
+
+                {form_field form=$form field="date_range"}
+                <div class="form-group {if $error}has-error{/if} col-md-2 input-group">
+                    {form_error form=$form field="date_range"}
+                    {if isset($message)}
+                    <br />
+                    <span class="error">{$message}</span>
+                    {/if}
+                    {/form_error}
+                    <select name="{$name}" class="form-control">
+                        {foreach $choices as $choice}
+                        {if $choice->value == $value} }
+                        <option value="{$choice->value}" selected>{$choice->label}</option>
+                        {else}
+                        <option value="{$choice->value}">{$choice->label}</option>
+                        {/if}
+                        {/foreach}
+                    </select>
+                </div>
+                {/form_field}
+
+                {form_field form=$form field="date_type"}
+                <div class="form-group {if $error}has-error{/if} col-md-2 input-group">
+                    {form_error form=$form field="date_type"}
+                    {if isset($message)}
+                    <br />
+                    <span class="error">{$message}</span>
+                    {/if}
+                    {/form_error}
+                    <select name="{$name}" class="form-control">
+                        {foreach $choices as $choice}
+                        {if $choice->value == $value} }
+                        <option value="{$choice->value}" selected>{$choice->label}</option>
+                        {else}
+                        <option value="{$choice->value}">{$choice->label}</option>
+                        {/if}
+                        {/foreach}
+                    </select>
+                </div>
+                {/form_field}
+
+                {form_field form=$form field="order"}
+                <div class="form-group {if $error}has-error{/if} col-md-2 input-group">
+                    {form_error form=$form field="order"}
+                    {if isset($message)}
+                    <br />
+                    <span class="error">{$message}</span>
+                    {/if}
+                    {/form_error}
                     <input type="text" name="{$name}" class="form-control" value="{$value}" \>
                     <span class="input-group-btn">
-                                <button type="submit" class="form-submit-button btn btn-default" >Set</button>
-                            </span>
+                <button type="submit" class="form-submit-button btn btn-default">Set</button>
+            </span>
                 </div>
                 {/form_field}
                 </form>
                 {/form}
+
+
                 <span class="help-block">
                     {intl l='Enter the IDs of order status you wish to be taken into account for your bestsellers statistics (eg: 2,3,4)' d='bestsellers.bo.default'}
                 </span>
@@ -119,7 +183,7 @@
                                     {loop type="auth" name="can_change" role="ADMIN" resource="admin.order-status" access="UPDATE"}
                                     <a title="{intl l='Edit this status' d='bestsellers.bo.default'}" href="{url path="/admin/configuration/order-status/update/%id" id=$ID}"><span class="glyphicon glyphicon-edit"></span></a>
                                     {if isset($DELETABLE)}
-                                        <a class="order-status-cancel" title="{intl l='Delete this status' d='bestsellers.bo.default'}" href="#cancel_order-status_dialog" data-id="{$ID}" data-toggle="modal"><span class="glyphicon glyphicon-remove-sign"></span></a>
+                                    <a class="order-status-cancel" title="{intl l='Delete this status' d='bestsellers.bo.default'}" href="#cancel_order-status_dialog" data-id="{$ID}" data-toggle="modal"><span class="glyphicon glyphicon-remove-sign"></span></a>
                                     {/if}
                                     {/loop}
                                 </div>
@@ -135,3 +199,28 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Utilisez getElementsByName pour obtenir tous les éléments avec le nom 'date_type'
+        // et sélectionnez le premier élément, car getElementsByName retourne une liste d'éléments
+        var dateTypeField = document.getElementsByName('date_type')[0];
+        var startDateField = document.getElementsByName('start_date')[0];
+        var endDateField = document.getElementsByName('end_date')[0];
+
+        // Cache les champs de date au chargement de la page
+        startDateField.style.display = 'none';
+        endDateField.style.display = 'none';
+
+        // Affiche ou masque les champs de date en fonction de la sélection
+        dateTypeField.addEventListener('change', function() {
+            if (this.value === 'fixed') {
+                startDateField.style.display = 'block';
+                endDateField.style.display = 'block';
+            } else if (this.value === 'dynamic') {
+                startDateField.style.display = 'none';
+                endDateField.style.display = 'none';
+            }
+        });
+    });
+</script>

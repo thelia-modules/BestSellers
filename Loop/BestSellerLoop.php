@@ -41,9 +41,7 @@ class BestSellerLoop extends Product
         $args = parent::getArgDefinitions();
 
         return $args->addArguments([
-            Argument::createAnyTypeArgument('start_date', null, false),
-            Argument::createAnyTypeArgument('end_date', null, false),
-            new Argument(
+        new Argument(
                 'order',
                 new TypeCollection(
                     new EnumListType(
@@ -75,9 +73,13 @@ class BestSellerLoop extends Product
     public function buildModelCriteria()
     {
         $query = parent::buildModelCriteria();
+        $startDateString = BestSellers::getConfigValue('start_date');
+        $endDateString = BestSellers::getConfigValue('end_date');
 
-        $startDate = $this->getStartDate() ? new \DateTime($this->getStartDate()) : null;
-        $endDate = $this->getEndDate() ? new \DateTime($this->getEndDate()) : null;
+        $startDate = new \DateTime($startDateString);
+        $startDate->setTime(0, 0, 0);
+        $endDate = new \DateTime($endDateString);
+        $endDate->setTime(23, 59, 59);
 
         $event = new BestSellersEvent($startDate, $endDate);
 
