@@ -16,14 +16,12 @@ use BestSellers\BestSellers;
 use BestSellers\Form\Configuration;
 use ClassicRide\ClassicRide;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Thelia\Controller\Admin\BaseAdminController;
 use Thelia\Core\Translation\Translator;
 use Thelia\Form\Exception\FormValidationException;
 
 class ConfigController extends BaseAdminController
 {
-
     public function setAction(Request $request)
     {
         $form = $this->createForm(Configuration::getName());
@@ -31,40 +29,42 @@ class ConfigController extends BaseAdminController
 
         try {
             $configForm = $this->validateForm($form);
-            $orderData = $configForm->get('order')->getData();
+            $orderData = $configForm->get("order")->getData();
             $formData = $configForm->all();
-            $start_date_form = $formData['start_date'];
-            $end_date_form = $formData['end_date'];
-            $date_range_form = $formData['date_range'];
+            $start_date_form = $formData["start_date"];
+            $end_date_form = $formData["end_date"];
+            $date_range_form = $formData["date_range"];
+            $date_type = $formData["date_type"];
 
+            if (
+                $start_date_form->getData() === null &&
+                $end_date_form->getData() === null
+            ) {
+                throw new \Exception(
+                    Translator::getInstance()->trans() .
+                    "Please select a date range or a start and end date"
+                );
+            }
             $date_range = $date_range_form->getData();
-            $startDate = $start_date_form->getData()->format('Y-m-d');
-            $endDate = $end_date_form->getData()->format('Y-m-d');
+            $startDate = $start_date_form->getData()->format("Y-m-d");
+            $endDate = $end_date_form->getData()->format("Y-m-d");
+            $date_type = $date_type->getData();
 
-            if ($startDate !== null) {
-                BestSellers::setConfigValue('start_date', $startDate, null, true);
-            }
-            if ($endDate !== null) {
-                BestSellers::setConfigValue('end_date', $endDate, null, true);
-            }
+            BestSellers::setConfigValue("start_date", $startDate, null, true);
+            BestSellers::setConfigValue("end_date", $endDate, null, true);
+            BestSellers::setConfigValue("order_types", $orderData, null, true);
+            BestSellers::setConfigValue("date_range", $date_range, null, true);
+            BestSellers::setConfigValue("date_type", $date_type, null, true);
 
-            BestSellers::setConfigValue('order_types', $orderData, null, true);
-
-            BestSellers::setConfigValue('date_range', $date_range, null, true);
-
-            $data = [
-                'module_code' => 'BestSellers',
-            ];
-
-
-            $response = $this->render(
-                'module-configure',
-                $data,
-            );
+            $response = $this->render("module-configure", [
+                "module_code" => "BestSellers",
+            ]);
         } catch (FormValidationException $e) {
             $this->setupFormErrorContext(
                 Translator::getInstance()->trans(
-                    'Error',
+                    "Error",
+                    [],
+                    ClassicRide::DOMAIN_NAME
                 ),
                 $e->getMessage(),
                 $form
@@ -74,12 +74,13 @@ class ConfigController extends BaseAdminController
         } catch (\Exception $e) {
             $this->setupFormErrorContext(
                 Translator::getInstance()->trans(
-                    'Error',
+                    "Error",
+                    [],
+                    ClassicRide::DOMAIN_NAME
                 ),
                 $e->getMessage(),
                 $form
             );
-
             return $this->generateSuccessRedirect($form);
         }
 

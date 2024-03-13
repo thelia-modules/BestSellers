@@ -24,56 +24,55 @@ class Configuration extends BaseForm
     {
         $form = $this->formBuilder;
 
-        $form->add('order', TextType::class, [
-            'data' => BestSellers::getConfigValue('order_types'),
-            'required' => true,
-            'empty_data' => '2,3,4',
+        $form->add("order", TextType::class, [
+            "data" => BestSellers::getConfigValue("order_types"),
+            "required" => true,
+            "empty_data" => "2,3,4",
         ]);
 
-        $startDateString = BestSellers::getConfigValue('start_date');
-        $endDateString = BestSellers::getConfigValue('end_date');
+        $startDateString = BestSellers::getConfigValue("start_date");
+        $endDateString = BestSellers::getConfigValue("end_date");
 
         $startDate = $startDateString ? new \DateTime($startDateString) : null;
         $endDate = $endDateString ? new \DateTime($endDateString) : null;
 
-        $form->add('start_date', DateType::class, [
-            'data' => $startDate,
-            'required' => false,
-            'widget' => 'single_text',
+        $form->add("start_date", DateType::class, [
+            "data" => $startDate,
+            "required" => false,
+            "widget" => "single_text",
         ]);
-        $form->add('end_date', DateType::class, [
-            'data' => $endDate,
-            'required' => false,
-            'widget' => 'single_text',
+        $form->add("end_date", DateType::class, [
+            "data" => $endDate,
+            "required" => false,
+            "widget" => "single_text",
         ]);
 
-        $form->add('date_range', ChoiceType::class, [
-            'data' => BestSellers::getConfigValue('date_range'),
-            'choices' => [
-                'Les 15 derniers jours' => 'last_15_days',
-                'Les 30 derniers jours' => 'last_30_days',
-                'Les 6 derniers mois' => 'last_6_months',
-                "L'année écoulée" => 'last_year',
-                'Depuis le début de l\'année' => 'this_year',
+        $form->add("date_range", ChoiceType::class, [
+            "data" => BestSellers::getConfigValue("date_range"),
+            "choices" => [
+                "Les 15 derniers jours" => "last_15_days",
+                "Les 30 derniers jours" => "last_30_days",
+                "Les 6 derniers mois" => "last_6_months",
+                "L'année dernière" => "last_year",
+                'Depuis le début de l\'année' => "this_year",
             ],
-            'required' => false,
-            'mapped' => false,
+            "required" => true,
+            "mapped" => false,
         ]);
 
-        $form->add('date_type', ChoiceType::class, [
-        'label' => 'Type de dates',
-        'choices' => [
-            'Dates fixes' => 'fixed',
-            'Dates dynamiques' => 'dynamic',
-        ],
-        'required' => true,
-        'mapped' => false,]) ;
-
-
-
+        $form->add("date_type", ChoiceType::class, [
+            "data" => BestSellers::getConfigValue("date_type"),
+            "label" => "Type de dates",
+            "choices" => [
+                "Dates fixes" => 1,
+                "Dates dynamiques" => 2,
+            ],
+            "required" => true,
+            "mapped" => false,
+        ]);
     }
     public static function getName()
     {
-        return 'bestsellers_configuration';
+        return "bestsellers_configuration";
     }
 }
