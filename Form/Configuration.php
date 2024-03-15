@@ -16,6 +16,7 @@ use BestSellers\BestSellers;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Thelia\Core\Translation\Translator;
 use Thelia\Form\BaseForm;
 
 class Configuration extends BaseForm
@@ -23,56 +24,57 @@ class Configuration extends BaseForm
     protected function buildForm(): void
     {
         $form = $this->formBuilder;
+        $translator = Translator::getInstance();
 
-        $form->add("order", TextType::class, [
-            "data" => BestSellers::getConfigValue("order_types"),
-            "required" => true,
-            "empty_data" => "2,3,4",
+        $form->add('order', TextType::class, [
+            'data' => BestSellers::getConfigValue('order_types'),
+            'required' => true,
+            'empty_data' => '2,3,4',
         ]);
 
-        $startDateString = BestSellers::getConfigValue("start_date");
-        $endDateString = BestSellers::getConfigValue("end_date");
+        $startDateString = BestSellers::getConfigValue('start_date');
+        $endDateString = BestSellers::getConfigValue('end_date');
 
         $startDate = $startDateString ? new \DateTime($startDateString) : null;
         $endDate = $endDateString ? new \DateTime($endDateString) : null;
 
-        $form->add("start_date", DateType::class, [
-            "data" => $startDate,
-            "required" => false,
-            "widget" => "single_text",
+        $form->add('start_date', DateType::class, [
+            'data' => $startDate,
+            'required' => false,
+            'widget' => 'single_text',
         ]);
-        $form->add("end_date", DateType::class, [
-            "data" => $endDate,
-            "required" => false,
-            "widget" => "single_text",
-        ]);
-
-        $form->add("date_range", ChoiceType::class, [
-            "data" => BestSellers::getConfigValue("date_range"),
-            "choices" => [
-                "Les 15 derniers jours" => "last_15_days",
-                "Les 30 derniers jours" => "last_30_days",
-                "Les 6 derniers mois" => "last_6_months",
-                "L'année dernière" => "last_year",
-                'Depuis le début de l\'année' => "this_year",
-            ],
-            "required" => true,
-            "mapped" => false,
+        $form->add('end_date', DateType::class, [
+            'data' => $endDate,
+            'required' => false,
+            'widget' => 'single_text',
         ]);
 
-        $form->add("date_type", ChoiceType::class, [
-            "data" => BestSellers::getConfigValue("date_type"),
-            "label" => "Type de dates",
-            "choices" => [
-                "Dates fixes" => 1,
-                "Dates dynamiques" => 2,
+        $form->add('date_range', ChoiceType::class, [
+            'data' => BestSellers::getConfigValue('date_range'),
+            'choices' => [
+                $translator->trans('Last 15 days', [], BestSellers::DOMAIN_NAME ) => 'last_15_days',
+                $translator->trans('Last 30 days', [], BestSellers::DOMAIN_NAME ) => 'last_30_days',
+                $translator->trans('The last 6 months', [], BestSellers::DOMAIN_NAME ) => 'last_6_months',
+                $translator->trans( 'The last year', [], BestSellers::DOMAIN_NAME ) => 'last_year',
+                $translator->trans('Since the beginning of the year', [], BestSellers::DOMAIN_NAME ) => 'this_year',
             ],
-            "required" => true,
-            "mapped" => false,
+            'required' => true,
+            'mapped' => false,
+        ]);
+
+        $form->add('date_type', ChoiceType::class, [
+            'data' => BestSellers::getConfigValue('date_type'),
+            'label' => 'Type de dates',
+            'choices' => [
+                $translator->trans('Fixed dates', [], BestSellers::DOMAIN_NAME ) => 1,
+                $translator->trans('Date range', [], BestSellers::DOMAIN_NAME ) => 2,
+            ],
+            'required' => true,
+            'mapped' => false,
         ]);
     }
     public static function getName()
     {
-        return "bestsellers_configuration";
+        return 'bestsellers_configuration';
     }
 }

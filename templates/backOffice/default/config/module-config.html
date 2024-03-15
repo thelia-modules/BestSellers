@@ -1,7 +1,7 @@
 <div class="general-block-decorator">
     <div class="row">
         <div class="col-md-12 title title-without-tabs">
-            {intl l='Order types' d='bestsellers.bo.default'}
+            {intl l='Order types and dates' d='bestsellers.bo.default'}
         </div>
         <div class="form-container">
             <div class="col-md-12">
@@ -18,6 +18,17 @@
                     </div>
                 </div>
                 {/if}
+                {form_field form=$form field="order"}
+                <div class="form-group {if $error}has-error{/if} col-md-2 input-group">
+                    {form_error form=$form field="order"}
+                    {if isset($message)}
+                    <br />
+                    <span class="error">{$message}</span>
+                    {/if}
+                    {/form_error}
+                    <input type="text" name="{$name}" class="form-control" value="{$value}" \>
+                </div>
+                {/form_field}
                 {form_field form=$form field="date_type"}
                 <div class="form-group {if $error}has-error{/if} col-md-2 input-group">
                     {form_error form=$form field="date_type"}
@@ -26,7 +37,7 @@
                     <span class="error">{$message}</span>
                     {/if}
                     {/form_error}
-                    <label for="date_type" id="date_type_label">Choose a date type :</label>
+                    <label for="date_type" id="date_type_label">{intl l='Choose a date type : ' d='bestsellers.bo.default'}</label>
                     <select name="{$name}" id="date_type" class="form-control">
                         {foreach $choices as $choice}
                         {if $choice->value == $value} }
@@ -47,7 +58,7 @@
                         <span class="error">{$message}</span>
                         {/if}
                         {/form_error}
-                        <label for="start_date" id="start_date_label">Choose a starting date :</label>
+                        <label for="start_date" id="start_date_label">{intl l='Choose a start date : ' d='bestsellers.bo.default'}</label>
                         <input type="date" name="{$name}" id="start_date" class="form-control" value="{$value}" \>
                     </div>
                     {/form_field}
@@ -61,7 +72,7 @@
                         <span class="error">{$message}</span>
                         {/if}
                         {/form_error}
-                        <label for="end_date" id="end_date_label">Choose a ending date :</label>
+                        <label for="end_date" id="end_date_label">{intl l='Choose an end date : ' d='bestsellers.bo.default'}</label>
                         <input type="date" name="{$name}" id="end_date" class="form-control" value="{$value}" \>
                     </div>
                     {/form_field}
@@ -75,7 +86,7 @@
                     {/if}
                     {/form_error}
                     <div class="date-range">
-                        <label for="date_range" id="date_range_label">Choose a date range :</label>
+                        <label for="date_range" id="date_range_label">{intl l='Choose a date range : ' d='bestsellers.bo.default'}</label>
                         <select name="{$name}"  id="date_range" class="form-control">
                             {foreach $choices as $choice}
                             {if $choice->value == $value} }
@@ -88,20 +99,9 @@
                     </div>
                 </div>
                 {/form_field}
-                {form_field form=$form field="order"}
-                <div class="form-group {if $error}has-error{/if} col-md-2 input-group">
-                    {form_error form=$form field="order"}
-                    {if isset($message)}
-                    <br />
-                    <span class="error">{$message}</span>
-                    {/if}
-                    {/form_error}
-                    <input type="text" name="{$name}" class="form-control" value="{$value}" \>
-                    <span class="input-group-btn">
-               <button type="submit" class="form-submit-button btn btn-default">Set</button>
+                <span class="input-group-btn">
+               <button type="submit" class="form-submit-button btn btn-default">{intl l='Set' d='bestsellers.bo.default'}</button>
                </span>
-                </div>
-                {/form_field}
                 </form>
                 {/form}
                 <span class="help-block">
