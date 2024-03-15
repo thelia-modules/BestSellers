@@ -15,17 +15,15 @@ namespace BestSellers\Controller;
 use BestSellers\BestSellers;
 use BestSellers\Form\Configuration;
 use ClassicRide\ClassicRide;
-use Symfony\Component\HttpFoundation\Request;
 use Thelia\Controller\Admin\BaseAdminController;
 use Thelia\Core\Translation\Translator;
 use Thelia\Form\Exception\FormValidationException;
 
 class ConfigController extends BaseAdminController
 {
-    public function setAction(Request $request)
+    public function setAction()
     {
         $form = $this->createForm(Configuration::getName());
-        $response = null;
 
         try {
             $configForm = $this->validateForm($form);

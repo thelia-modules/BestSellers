@@ -52,11 +52,11 @@ class Configuration extends BaseForm
         $form->add('date_range', ChoiceType::class, [
             'data' => BestSellers::getConfigValue('date_range'),
             'choices' => [
-                $translator->trans('Last 15 days', [], BestSellers::DOMAIN_NAME ) => 'last_15_days',
-                $translator->trans('Last 30 days', [], BestSellers::DOMAIN_NAME ) => 'last_30_days',
-                $translator->trans('The last 6 months', [], BestSellers::DOMAIN_NAME ) => 'last_6_months',
-                $translator->trans( 'The last year', [], BestSellers::DOMAIN_NAME ) => 'last_year',
-                $translator->trans('Since the beginning of the year', [], BestSellers::DOMAIN_NAME ) => 'this_year',
+                $translator->trans('Last 15 days', [], BestSellers::DOMAIN_NAME ) => BestSellers::LAST_15_DAYS,
+                $translator->trans('Last 30 days', [], BestSellers::DOMAIN_NAME ) => BestSellers::LAST_30_DAYS,
+                $translator->trans('The last 6 months', [], BestSellers::DOMAIN_NAME ) => BestSellers::LAST_6_MONTHS,
+                $translator->trans( 'The last year', [], BestSellers::DOMAIN_NAME ) => BestSellers::LAST_YEAR,
+                $translator->trans('Since the beginning of the year', [], BestSellers::DOMAIN_NAME ) => BestSellers::THIS_YEAR,
             ],
             'required' => true,
             'mapped' => false,
@@ -66,8 +66,8 @@ class Configuration extends BaseForm
             'data' => BestSellers::getConfigValue('date_type'),
             'label' => 'Type de dates',
             'choices' => [
-                $translator->trans('Fixed dates', [], BestSellers::DOMAIN_NAME ) => 1,
-                $translator->trans('Date range', [], BestSellers::DOMAIN_NAME ) => 2,
+                $translator->trans('Fixed dates', [], BestSellers::DOMAIN_NAME ) => BestSellers::FIXED_DATE,
+                $translator->trans('Date range', [], BestSellers::DOMAIN_NAME ) => BestSellers::DATE_RANGE,
             ],
             'required' => true,
             'mapped' => false,
