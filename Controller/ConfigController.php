@@ -34,25 +34,51 @@ class ConfigController extends BaseAdminController
             $dateRangeForm = $formData['date_range'];
             $dateType = $formData['date_type'];
 
-            if (
-                $startDateForm->getData() === null &&
-                $endDateForm->getData() === null
-            ) {
-                throw new \Exception(
-                    Translator::getInstance()->trans() .
-                    'Please select a date range or a start and end date'
-                );
-            }
             $date_range = $dateRangeForm->getData();
-            $startDate = $startDateForm->getData()->format('Y-m-d');
-            $endDate = $endDateForm->getData()->format('Y-m-d');
+
+            if ($startDate = $startDateForm->getData()) {
+                $startDate = $startDate->format('Y-m-d');
+            }
+            if ($endDate = $endDateForm->getData()) {
+                $endDate = $endDate->format('Y-m-d');
+            }
+
             $dateType = $dateType->getData();
 
-            BestSellers::setConfigValue('start_date', $startDate, null, true);
-            BestSellers::setConfigValue('end_date', $endDate, null, true);
-            BestSellers::setConfigValue('order_types', $orderData, null, true);
-            BestSellers::setConfigValue('date_range', $date_range, null, true);
-            BestSellers::setConfigValue('date_type', $dateType, null, true);
+            if ($startDate !== null) {
+                BestSellers::setConfigValue(
+                    'start_date',
+                    $startDate,
+                );
+            }
+
+            if ($endDate !== null) {
+                BestSellers::setConfigValue(
+                    'end_date',
+                    $endDate,
+                );
+            }
+
+            if ($orderData !== null) {
+                BestSellers::setConfigValue(
+                    'order_types',
+                    $orderData,
+                );
+            }
+
+            if ($date_range !== null) {
+                BestSellers::setConfigValue(
+                    'date_range',
+                    $date_range,
+                );
+            }
+
+            if ($dateType !== null) {
+                BestSellers::setConfigValue(
+                    'date_type',
+                    $dateType,
+                );
+            }
 
             $response = $this->render('module-configure', [
                 'module_code' => 'BestSellers',

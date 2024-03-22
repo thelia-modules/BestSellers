@@ -82,51 +82,43 @@ class BestSellerLoop extends Product
     public function buildModelCriteria()
     {
         $query = parent::buildModelCriteria();
+
+        $startDate = new \DateTime();
+        $endDate = new \DateTime();
+
         $dateType = BestSellers::getConfigValue('date_type');
         $startDateString = BestSellers::getConfigValue('start_date');
         $endDateString = BestSellers::getConfigValue('end_date');
 
-        if ($dateType == BestSellers::FIXED_DATE) {
-            $startDate = new \DateTime($startDateString);
-            $startDate->setTime(0, 0, 0);
-            $endDate = new \DateTime($endDateString);
-            $endDate->setTime(23, 59, 59);
-        } elseif ($dateType == BestSellers::DATE_RANGE) {
-            $dateRange = BestSellers::getConfigValue('date_range');
-            switch ($dateRange) {
-                case BestSellers::LAST_15_DAYS:
-                    $startDate = new \DateTime('-15 days');
-                    $startDate->setTime(0, 0, 0);
-                    $endDate = new \DateTime('now');
-                    $endDate->setTime(23, 59, 59);
-                    break;
-                case BestSellers::LAST_30_DAYS:
-                    $startDate = new \DateTime('-30 days');
-                    $startDate->setTime(0, 0, 0);
-                    $endDate = new \DateTime('now');
-                    $endDate->setTime(23, 59, 59);
-                    break;
-                case BestSellers::LAST_6_MONTHS:
-                    $startDate = new \DateTime('-6 months');
-                    $startDate->setTime(0, 0, 0);
-                    $endDate = new \DateTime('now');
-                    $endDate->setTime(23, 59, 59);
-                    break;
-                case BestSellers::THIS_YEAR:
-                    $startDate = new \DateTime('first day of January');
-                    $startDate->setTime(0, 0, 0);
-                    $endDate = new \DateTime('now');
-                    $endDate->setTime(23, 59, 59);
-                    break;
-                case BestSellers::LAST_YEAR:
-                    $startDate = new \DateTime(
-                        'first day of January last year'
-                    );
-                    $startDate->setTime(0, 0, 0);
-                    $endDate = new \DateTime('now');
-                    $endDate->setTime(23, 59, 59);
-                    break;
-            }
+        switch ($dateType) {
+            case BestSellers::FIXED_DATE:
+                $startDate = new \DateTime($startDateString);
+                $startDate->setTime(0, 0, 0);
+                $endDate = new \DateTime($endDateString);
+                $endDate->setTime(23, 59, 59);
+                break;
+
+            case BestSellers::DATE_RANGE:
+                $dateRange = BestSellers::getConfigValue('date_range');
+                switch ($dateRange) {
+                    case BestSellers::LAST_15_DAYS:
+                        $startDate = new \DateTime('-15 days');
+                        break;
+                    case BestSellers::LAST_30_DAYS:
+                        $startDate = new \DateTime('-30 days');
+                        break;
+                    case BestSellers::LAST_6_MONTHS:
+                        $startDate = new \DateTime('-6 months');
+                        break;
+                    case BestSellers::THIS_YEAR:
+                        $startDate = new \DateTime('first day of January');
+                        break;
+                    case BestSellers::LAST_YEAR:
+                        $startDate = new \DateTime(
+                            'first day of January last year'
+                        );
+                        break;
+                }
         }
 
         $event = new BestSellersEvent($startDate, $endDate);
@@ -136,7 +128,7 @@ class BestSellerLoop extends Product
             BestSellers::GET_BEST_SELLING_PRODUCTS
         );
 
-        $caseClause = $caseSalesClause = '';
+        $caseClause = $caseSalesClause = "";
 
         $productData = $event->getBestSellingProductsData();
 
