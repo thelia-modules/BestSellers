@@ -80,15 +80,13 @@ class ConfigController extends BaseAdminController
                 );
             }
 
-            $response = $this->render('module-configure', [
-                'module_code' => 'BestSellers',
-            ]);
+            $response = $this->redirectAction();
+
         } catch (FormValidationException $e) {
             $this->setupFormErrorContext(
                 Translator::getInstance()->trans(
                     'Error',
                     [],
-                    ClassicRide::DOMAIN_NAME
                 ),
                 $e->getMessage(),
                 $form
@@ -100,7 +98,6 @@ class ConfigController extends BaseAdminController
                 Translator::getInstance()->trans(
                     'Error',
                     [],
-                    ClassicRide::DOMAIN_NAME
                 ),
                 $e->getMessage(),
                 $form
@@ -109,5 +106,9 @@ class ConfigController extends BaseAdminController
         }
 
         return $response;
+    }
+    public function redirectAction()
+    {
+        return $this->generateRedirectFromRoute('admin.module.configure', [], ['module_code' => 'BestSellers']);
     }
 }

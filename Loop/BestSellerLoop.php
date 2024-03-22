@@ -92,33 +92,13 @@ class BestSellerLoop extends Product
 
         switch ($dateType) {
             case BestSellers::FIXED_DATE:
-                $startDate = new \DateTime($startDateString);
-                $startDate->setTime(0, 0, 0);
-                $endDate = new \DateTime($endDateString);
-                $endDate->setTime(23, 59, 59);
+                $dates = $this->setFixedDate($startDateString, $endDateString);
+                $startDate = $dates['start_date'];
+                $endDate = $dates['end_date'];
                 break;
-
             case BestSellers::DATE_RANGE:
-                $dateRange = BestSellers::getConfigValue('date_range');
-                switch ($dateRange) {
-                    case BestSellers::LAST_15_DAYS:
-                        $startDate = new \DateTime('-15 days');
-                        break;
-                    case BestSellers::LAST_30_DAYS:
-                        $startDate = new \DateTime('-30 days');
-                        break;
-                    case BestSellers::LAST_6_MONTHS:
-                        $startDate = new \DateTime('-6 months');
-                        break;
-                    case BestSellers::THIS_YEAR:
-                        $startDate = new \DateTime('first day of January');
-                        break;
-                    case BestSellers::LAST_YEAR:
-                        $startDate = new \DateTime(
-                            'first day of January last year'
-                        );
-                        break;
-                }
+                $startDate = $this->setDateRange(BestSellers::getConfigValue('date_range'));
+                break;
         }
 
         $event = new BestSellersEvent($startDate, $endDate);
@@ -221,5 +201,26 @@ class BestSellerLoop extends Product
             ->set('SOLD_QUANTITY', $item->getVirtualColumn('sold_quantity'))
             ->set('SOLD_AMOUNT', $item->getVirtualColumn('sold_amount'))
             ->set('SALE_RATIO', $item->getVirtualColumn('sale_ratio'));
+    }
+    private function setFixedDate($startDateString, $endDateString) {
+        $startDate = new \DateTime($startDateString);
+        $startDate->setTime(0, 0, 0);
+        $endDate = new \DateTime($endDateString);
+        $endDate->setTime(23, 59, 59);
+        return ['start_date' => $startDate, 'end_date' => $endDate];
+    }
+    private function setDateRange($dateRange) {
+        switch ($dateRange) {
+            case BestSellers::LAST_15_DAYS:
+                return new \DateTime('-15 days');
+            case BestSellers::LAST_30_DAYS:
+                return new \DateTime('-30 days');
+            case BestSellers::LAST_6_MONTHS:
+                return new \DateTime('-6 months');
+            case BestSellers::THIS_YEAR:
+                return new \DateTime('first day of January');
+            case BestSellers::LAST_YEAR:
+                return new \DateTime('first day of January last year');
+        }
     }
 }
