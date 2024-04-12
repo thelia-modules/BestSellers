@@ -96,10 +96,13 @@ class EventManager extends BaseAction implements EventSubscriberInterface
 
                 $stmt = $con->prepare($query);
 
-                $res = $stmt->execute([
-                    $event->getStartDate()->format('Y-m-d H:i:s'),
-                    $event->getEndDate()->format('Y-m-d H:i:s'),
-                ]);
+                $startDate = $event->getStartDate()->format('Y-m-d H:i:s');
+                $endDate = $event->getEndDate()->format('Y-m-d H:i:s');
+
+                $stmt->bindParam(1, $startDate);
+                $stmt->bindParam(2, $endDate);
+
+                $res = $stmt->execute();
 
                 $data = [];
 
