@@ -171,29 +171,28 @@ class BestSellerLoop extends Product
             if ($customOrder === BestSellers::ORDER_BY_NUMBER_OF_SALES){
                 $query->orderBy('sold_quantity', Criteria::DESC);
             }
+            return $query;
         }
-        if (!$customOrder){
-            foreach ($orders as $order) {
-                switch ($order) {
-                    case 'sold_count':
-                        $query->orderBy('sold_quantity', Criteria::ASC);
-                        break;
-                    case 'sold_count_reverse':
-                        $query->orderBy('sold_quantity', Criteria::DESC);
-                        break;
-                    case 'sold_amount':
-                        $query->orderBy('sold_amount', Criteria::ASC);
-                        break;
-                    case 'sold_amount_reverse':
-                        $query->orderBy('sold_amount', Criteria::DESC);
-                        break;
-                    case 'sale_ratio':
-                        $query->orderBy('sale_ratio', Criteria::ASC);
-                        break;
-                    case 'sale_ratio_reverse':
-                        $query->orderBy('sale_ratio', Criteria::DESC);
-                        break;
-                }
+        foreach ($orders as $order) {
+            switch ($order) {
+                case 'sold_count':
+                    $query->orderBy('sold_quantity', Criteria::ASC);
+                    break;
+                case 'sold_count_reverse':
+                    $query->orderBy('sold_quantity', Criteria::DESC);
+                    break;
+                case 'sold_amount':
+                    $query->orderBy('sold_amount', Criteria::ASC);
+                    break;
+                case 'sold_amount_reverse':
+                    $query->orderBy('sold_amount', Criteria::DESC);
+                    break;
+                case 'sale_ratio':
+                    $query->orderBy('sale_ratio', Criteria::ASC);
+                    break;
+                case 'sale_ratio_reverse':
+                    $query->orderBy('sale_ratio', Criteria::DESC);
+                    break;
             }
         }
         return $query;
