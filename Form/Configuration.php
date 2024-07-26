@@ -54,6 +54,7 @@ class Configuration extends BaseForm
             'choices' => [
                 $translator->trans('Last 15 days', [], BestSellers::DOMAIN_NAME ) => BestSellers::LAST_15_DAYS,
                 $translator->trans('Last 30 days', [], BestSellers::DOMAIN_NAME ) => BestSellers::LAST_30_DAYS,
+                $translator->trans('The last 3 months', [], BestSellers::DOMAIN_NAME ) => BestSellers::LAST_3_MONTHS,
                 $translator->trans('The last 6 months', [], BestSellers::DOMAIN_NAME ) => BestSellers::LAST_6_MONTHS,
                 $translator->trans( 'The last year', [], BestSellers::DOMAIN_NAME ) => BestSellers::LAST_YEAR,
                 $translator->trans('Since the beginning of the year', [], BestSellers::DOMAIN_NAME ) => BestSellers::THIS_YEAR,
@@ -70,6 +71,18 @@ class Configuration extends BaseForm
                 $translator->trans('Date range', [], BestSellers::DOMAIN_NAME ) => BestSellers::DATE_RANGE,
             ],
             'required' => true,
+            'mapped' => false,
+        ]);
+
+        $form->add('order_by', ChoiceType::class, [
+            'data' => BestSellers::getConfigValue('order_by'),
+            'label' => $translator->trans('Order by', [], BestSellers::DOMAIN_NAME),
+            'choices' => [
+                $translator->trans('Undefined', [], BestSellers::DOMAIN_NAME ) => null,
+                $translator->trans('Number of sales', [], BestSellers::DOMAIN_NAME ) => BestSellers::ORDER_BY_NUMBER_OF_SALES,
+                $translator->trans('Sales revenue', [], BestSellers::DOMAIN_NAME ) => BestSellers::ORDER_BY_SALES_REVENUE,
+            ],
+            'required' => false,
             'mapped' => false,
         ]);
     }

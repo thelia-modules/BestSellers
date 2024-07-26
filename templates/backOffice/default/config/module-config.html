@@ -99,6 +99,30 @@
                     </div>
                 </div>
                 {/form_field}
+
+
+                {form_field form=$form field="order_by"}
+                <div class="form-group {if $error}has-error{/if} col-md-2 input-group">
+                    {form_error form=$form field="order_by"}
+                    {if isset($message)}
+                    <br />
+                    <span class="error">{$message}</span>
+                    {/if}
+                    {/form_error}
+                    <div class="date-range">
+                        <label for="date_range" id="order_by_label">{intl l='Order by' d='bestsellers.bo.default'}</label>
+                        <select name="{$name}"  id="order_by_range" class="form-control">
+                            {foreach $choices as $choice}
+                            {if $choice->value == $value} }
+                            <option value="{$choice->value}" selected>{$choice->label}</option>
+                            {else}
+                            <option value="{$choice->value}">{$choice->label}</option>
+                            {/if}
+                            {/foreach}
+                        </select>
+                    </div>
+                </div>
+                {/form_field}
                 <span class="input-group-btn">
                <button type="submit" class="form-submit-button btn btn-default">{intl l='Set' d='bestsellers.bo.default'}</button>
                </span>

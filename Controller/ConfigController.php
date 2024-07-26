@@ -35,7 +35,7 @@ class ConfigController extends BaseAdminController
             $dateType = $formData['date_type'];
 
             $date_range = $dateRangeForm->getData();
-
+            $orderBy = $formData['order_by']->getData();
             if ($startDate = $startDateForm->getData()) {
                 $startDate = $startDate->format('Y-m-d');
             }
@@ -79,6 +79,11 @@ class ConfigController extends BaseAdminController
                     $dateType,
                 );
             }
+
+            BestSellers::setConfigValue(
+                'order_by',
+                $orderBy,
+            );
 
             $response = $this->redirectAction();
 

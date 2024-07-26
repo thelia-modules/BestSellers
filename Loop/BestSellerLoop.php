@@ -163,26 +163,37 @@ class BestSellerLoop extends Product
 
         $orders = $this->getOrder();
 
-        foreach ($orders as $order) {
-            switch ($order) {
-                case 'sold_count':
-                    $query->orderBy('sold_quantity', Criteria::ASC);
-                    break;
-                case 'sold_count_reverse':
-                    $query->orderBy('sold_quantity', Criteria::DESC);
-                    break;
-                case 'sold_amount':
-                    $query->orderBy('sold_amount', Criteria::ASC);
-                    break;
-                case 'sold_amount_reverse':
-                    $query->orderBy('sold_amount', Criteria::DESC);
-                    break;
-                case 'sale_ratio':
-                    $query->orderBy('sale_ratio', Criteria::ASC);
-                    break;
-                case 'sale_ratio_reverse':
-                    $query->orderBy('sale_ratio', Criteria::DESC);
-                    break;
+        $customOrder = BestSellers::getConfigValue('order_by');
+        if ($customOrder){
+            if ($customOrder === BestSellers::ORDER_BY_SALES_REVENUE){
+                $query->orderBy('sale_ratio', Criteria::DESC);
+            }
+            if ($customOrder === BestSellers::ORDER_BY_NUMBER_OF_SALES){
+                $query->orderBy('sold_quantity', Criteria::DESC);
+            }
+        }
+        if (!$customOrder){
+            foreach ($orders as $order) {
+                switch ($order) {
+                    case 'sold_count':
+                        $query->orderBy('sold_quantity', Criteria::ASC);
+                        break;
+                    case 'sold_count_reverse':
+                        $query->orderBy('sold_quantity', Criteria::DESC);
+                        break;
+                    case 'sold_amount':
+                        $query->orderBy('sold_amount', Criteria::ASC);
+                        break;
+                    case 'sold_amount_reverse':
+                        $query->orderBy('sold_amount', Criteria::DESC);
+                        break;
+                    case 'sale_ratio':
+                        $query->orderBy('sale_ratio', Criteria::ASC);
+                        break;
+                    case 'sale_ratio_reverse':
+                        $query->orderBy('sale_ratio', Criteria::DESC);
+                        break;
+                }
             }
         }
         return $query;
@@ -217,6 +228,8 @@ class BestSellerLoop extends Product
                 return new \DateTime('-30 days');
             case BestSellers::LAST_6_MONTHS:
                 return new \DateTime('-6 months');
+            case BestSellers::LAST_3_MONTHS:
+                return new \DateTime('-3 months');
             case BestSellers::THIS_YEAR:
                 return new \DateTime('first day of January');
             case BestSellers::LAST_YEAR:
