@@ -39,11 +39,18 @@ class BestSellers extends BaseModule
 
     const LAST_30_DAYS = 'last_30_days';
 
+    const LAST_3_MONTHS = 'last_3_months';
+
     const LAST_6_MONTHS = 'last_6_months';
 
     const LAST_YEAR = 'last_year';
 
     const THIS_YEAR = 'this_year';
+
+    const ORDER_BY_NUMBER_OF_SALES = 'order_by_number_of_sales';
+
+    const ORDER_BY_SALES_REVENUE = 'order_by_sales_revenue';
+
 
     const FIXED_DATE = 1;
 

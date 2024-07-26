@@ -163,6 +163,16 @@ class BestSellerLoop extends Product
 
         $orders = $this->getOrder();
 
+        $customOrder = BestSellers::getConfigValue('order_by');
+        if ($customOrder){
+            if ($customOrder === BestSellers::ORDER_BY_SALES_REVENUE){
+                $query->orderBy('sale_ratio', Criteria::DESC);
+            }
+            if ($customOrder === BestSellers::ORDER_BY_NUMBER_OF_SALES){
+                $query->orderBy('sold_quantity', Criteria::DESC);
+            }
+            return $query;
+        }
         foreach ($orders as $order) {
             switch ($order) {
                 case 'sold_count':
@@ -217,6 +227,8 @@ class BestSellerLoop extends Product
                 return new \DateTime('-30 days');
             case BestSellers::LAST_6_MONTHS:
                 return new \DateTime('-6 months');
+            case BestSellers::LAST_3_MONTHS:
+                return new \DateTime('-3 months');
             case BestSellers::THIS_YEAR:
                 return new \DateTime('first day of January');
             case BestSellers::LAST_YEAR:
