@@ -10,11 +10,11 @@
  * file that was distributed with this source code.
  */
 
-/*      email : thelia@cqfdev.fr                                                     */
-/*      web : http://www.cqfdev.fr                                                   */
+/*      email : thelia@cqfdev.fr */
+/*      web : http://www.cqfdev.fr */
 
-/*      For the full copyright and license information, please view the LICENSE      */
-/*      file that was distributed with this source code.                             */
+/*      For the full copyright and license information, please view the LICENSE */
+/*      file that was distributed with this source code. */
 
 namespace BestSellers\Loop;
 
@@ -39,44 +39,48 @@ class BestSellerLoop extends Product
     protected function getArgDefinitions()
     {
         $args = parent::getArgDefinitions();
-        return $args->addArguments([
-            new Argument(
-                'order',
-                new TypeCollection(
-                    new EnumListType([
-                        'id',
-                        'id_reverse',
-                        'alpha',
-                        'alpha_reverse',
-                        'min_price',
-                        'max_price',
-                        'manual',
-                        'manual_reverse',
-                        'created',
-                        'created_reverse',
-                        'updated',
-                        'updated_reverse',
-                        'ref',
-                        'ref_reverse',
-                        'visible',
-                        'visible_reverse',
-                        'position',
-                        'position_reverse',
-                        'promo',
-                        'new',
-                        'random',
-                        'given_id',
-                        'sold_count',
-                        'sold_count_reverse',
-                        'sold_amount',
-                        'sold_amount_reverse',
-                        'sale_ratio',
-                        'sale_ratio_reverse',
-                    ])
+
+        return $args
+            ->addArguments([
+                new Argument(
+                    'order',
+                    new TypeCollection(
+                        new EnumListType([
+                            'id',
+                            'id_reverse',
+                            'alpha',
+                            'alpha_reverse',
+                            'min_price',
+                            'max_price',
+                            'manual',
+                            'manual_reverse',
+                            'created',
+                            'created_reverse',
+                            'updated',
+                            'updated_reverse',
+                            'ref',
+                            'ref_reverse',
+                            'visible',
+                            'visible_reverse',
+                            'position',
+                            'position_reverse',
+                            'promo',
+                            'new',
+                            'random',
+                            'given_id',
+                            'sold_count',
+                            'sold_count_reverse',
+                            'sold_amount',
+                            'sold_amount_reverse',
+                            'sale_ratio',
+                            'sale_ratio_reverse',
+                        ])
+                    ),
+                    'alpha'
                 ),
-                'alpha'
-            ),
-        ]);
+            ])
+            ->addArgument(Argument::createBooleanTypeArgument('only_sold_products', false))
+        ;
     }
 
     public function buildModelCriteria()
@@ -108,7 +112,7 @@ class BestSellerLoop extends Product
             BestSellers::GET_BEST_SELLING_PRODUCTS
         );
 
-        $caseClause = $caseSalesClause = "";
+        $caseClause = $caseSalesClause = '';
 
         $productData = $event->getBestSellingProductsData();
 
@@ -131,21 +135,25 @@ class BestSellerLoop extends Product
         if (!empty($caseClause)) {
             $query
                 ->withColumn(
-                    'CASE ' .
-                    ProductTableMap::ID .
-                    ' ' .
-                    $caseClause .
+                    'CASE '.
+                    ProductTableMap::ID.
+                    ' '.
+                    $caseClause.
                     ' ELSE 0 END',
                     'sold_quantity'
                 )
                 ->withColumn(
-                    'CASE ' .
-                    ProductTableMap::ID .
-                    ' ' .
-                    $caseSalesClause .
+                    'CASE '.
+                    ProductTableMap::ID.
+                    ' '.
+                    $caseSalesClause.
                     ' ELSE 0 END',
                     'sold_amount'
                 );
+
+            if (true === $this->getOnlySoldProducts()) {
+                $query->where('(CASE ' . ProductTableMap::ID . ' ' . $caseClause . ' ELSE 0 END) > 0');
+            }
         } else {
             $query
                 ->withColumn('(0)', 'sold_quantity')
@@ -154,7 +162,7 @@ class BestSellerLoop extends Product
 
         if ($event->getTotalSales() !== 0) {
             $query->withColumn(
-                '(select 100 * sold_amount / ' . $event->getTotalSales() . ')',
+                '(select 100 * sold_amount / '.$event->getTotalSales().')',
                 'sale_ratio'
             );
         } else {
@@ -164,15 +172,18 @@ class BestSellerLoop extends Product
         $orders = $this->getOrder();
 
         $customOrder = BestSellers::getConfigValue('order_by');
-        if ($customOrder){
-            if ($customOrder === BestSellers::ORDER_BY_SALES_REVENUE){
+
+        if ($customOrder) {
+            if ($customOrder === BestSellers::ORDER_BY_SALES_REVENUE) {
                 $query->orderBy('sale_ratio', Criteria::DESC);
             }
-            if ($customOrder === BestSellers::ORDER_BY_NUMBER_OF_SALES){
+            if ($customOrder === BestSellers::ORDER_BY_NUMBER_OF_SALES) {
                 $query->orderBy('sold_quantity', Criteria::DESC);
             }
+
             return $query;
         }
+
         foreach ($orders as $order) {
             switch ($order) {
                 case 'sold_count':
@@ -195,6 +206,7 @@ class BestSellerLoop extends Product
                     break;
             }
         }
+
         return $query;
     }
 
@@ -205,21 +217,26 @@ class BestSellerLoop extends Product
      */
     protected function addOutputFields(
         LoopResultRow $loopResultRow,
-                      $item
+        $item
     ): void {
         $loopResultRow
             ->set('SOLD_QUANTITY', $item->getVirtualColumn('sold_quantity'))
             ->set('SOLD_AMOUNT', $item->getVirtualColumn('sold_amount'))
             ->set('SALE_RATIO', $item->getVirtualColumn('sale_ratio'));
     }
-    private function setFixedDate($startDateString, $endDateString) {
+
+    private function setFixedDate($startDateString, $endDateString)
+    {
         $startDate = new \DateTime($startDateString);
         $startDate->setTime(0, 0, 0);
         $endDate = new \DateTime($endDateString);
         $endDate->setTime(23, 59, 59);
+
         return ['start_date' => $startDate, 'end_date' => $endDate];
     }
-    private function setDateRange($dateRange) {
+
+    private function setDateRange($dateRange)
+    {
         switch ($dateRange) {
             case BestSellers::LAST_15_DAYS:
                 return new \DateTime('-15 days');

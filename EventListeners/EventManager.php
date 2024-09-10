@@ -60,7 +60,7 @@ class EventManager extends BaseAction implements EventSubscriberInterface
         try {
             $cacheItem = $this->cacheAdapter->getItem($cacheKey);
 
-            if (!$cacheItem->isHit()) {
+            if (true || !$cacheItem->isHit()) {
                 /** @var PdoConnection $con */
                 $con = Propel::getConnection();
 

@@ -42,6 +42,11 @@ The module provide the loop `best_selling_product`, which extend the loop `produ
 
 All the arguments of the loop `product` are available.
 
+A new argument `only_sold_products` (default false) is added to the loop parameters.
+If true, only the sold products will be returned. Products that were never sold will not be returned.
+
+If false (the default), all products will be returned, even those that have never been sold.
+
 The loop offers two new values for the parameter `order` of the loop `product``
 - sold_count_reverse : sort by number of sales in decreasing order
 - sold_count : sort by number of sales in increasing order
@@ -161,6 +166,11 @@ avec un article donné.
 #### Paramètres en entrée
 
 Tous les arguments de la boucle `product` sont disponibles.
+
+Un nouvel argument `only_sold_products` (par défaut false) est ajouté aux paramètres de la boucle.
+Si true, seuls les produits vendus seront retournés. Les produits qui n'ont jamais été vendus ne seront pas retournés.
+
+Si false (par défaut), tous les produits seront retournés, même ceux qui n'ont jamais été vendus.
 
 La boucle propose deux valeurs supplémentaires pour le paramètre `order` de la boucle `product`:
 - sold_count_reverse : trier par nombre de ventes décroissantes
