@@ -5,9 +5,6 @@ namespace BestSellers\Controller;
 
 use BestSellers\Form\Configuration;
 use BestSellers\BestSellers;
-use ClassicRide\ClassicRide;
-use Front\Front;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Thelia\Controller\Admin\BaseAdminController;
 use Thelia\Core\Translation\Translator;
 use Thelia\Form\Exception\FormValidationException;
@@ -36,7 +33,7 @@ class ConfigController extends BaseAdminController
                 Translator::getInstance()->trans(
                     "Error",
                     [],
-                    ClassicRide::DOMAIN_NAME
+                    BestSellers::DOMAIN_NAME
                 ),
                 $e->getMessage(),
                 $form
@@ -47,7 +44,7 @@ class ConfigController extends BaseAdminController
                 Translator::getInstance()->trans(
                     "Error",
                     [],
-                    ClassicRide::DOMAIN_NAME
+                    BestSellers::DOMAIN_NAME
                 ),
                 $e->getMessage(),
                 $form
