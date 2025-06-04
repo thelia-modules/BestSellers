@@ -14,7 +14,6 @@ namespace BestSellers\Controller;
 
 use BestSellers\BestSellers;
 use BestSellers\Form\Configuration;
-use ClassicRide\ClassicRide;
 use Thelia\Controller\Admin\BaseAdminController;
 use Thelia\Core\Translation\Translator;
 use Thelia\Form\Exception\FormValidationException;
