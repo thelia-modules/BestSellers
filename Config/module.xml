@@ -22,6 +22,11 @@
             <email>thelia@cqfdev.fr</email>
             <website>www.cqfdev.fr</website>
         </author>
+      <author>
+        <name>Arthur Lashermes</name>
+        <company>OpenStudio</company>
+        <email>alashermes@openstudio.fr</email>
+      </author>
     </authors>
     <type>classic</type>
     <thelia>2.5.0</thelia>

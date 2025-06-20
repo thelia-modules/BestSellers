@@ -15,102 +15,68 @@
 
 namespace BestSellers\EventListeners;
 
+use DateTime;
 use Thelia\Core\Event\ActionEvent;
 
 class BestSellersEvent extends ActionEvent
 {
-    /** @var \DateTime */
-    protected $startDate;
+    protected DateTime $startDate;
 
-    /** @var \DateTime */
-    protected $endDate;
+    protected DateTime $endDate;
 
-    /** @var array */
-    protected $bestSellingProductsData = [];
+    protected array $bestSellingProductsData = [];
 
-    protected $totalSales = 0;
+    protected int $totalSales = 0;
 
-    /**
-     * BestSellersEvent constructor.
-     * @param $startDate
-     * @param $endDate
-     */
-    public function __construct(\DateTime $startDate = null, \DateTime $endDate = null)
+
+    public function __construct(DateTime $startDate = null, DateTime $endDate = null)
     {
-        $this->startDate = null === $startDate ? new \DateTime("1970-01-01") : $startDate;
-        $this->endDate = null === $endDate ? new \DateTime() : $endDate;
+        $this->startDate = $startDate ?? new DateTime("1970-01-01");
+        $this->endDate = $endDate ?? new DateTime();
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getStartDate()
+
+    public function getStartDate(): DateTime
     {
         return $this->startDate;
     }
 
-    /**
-     * @param \DateTime $startDate
-     * @return $this
-     */
-    public function setStartDate($startDate)
+    public function setStartDate(DateTime $startDate): static
     {
         $this->startDate = $startDate;
         return $this;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getEndDate()
+    public function getEndDate(): DateTime
     {
         return $this->endDate;
     }
 
-    /**
-     * @param \DateTime $endDate
-     * @return $this
-     */
-    public function setEndDate($endDate)
+    public function setEndDate(DateTime $endDate): static
     {
         $this->endDate = $endDate;
         return $this;
     }
 
-
-    /**
-     * @return array
-     */
-    public function getBestSellingProductsData()
+    public function getBestSellingProductsData(): array
     {
         return ! empty($this->bestSellingProductsData) ? $this->bestSellingProductsData : [];
     }
 
-    /**
-     * @param array $bestSellingProductsData
-     * @return $this
-     */
-    public function setBestSellingProductsData($bestSellingProductsData)
+    public function setBestSellingProductsData(array $bestSellingProductsData): static
     {
         $this->bestSellingProductsData = $bestSellingProductsData;
         return $this;
     }
 
-    /**
-     * @return int
-     */
-    public function getTotalSales()
+    public function getTotalSales(): int
     {
         return $this->totalSales;
     }
 
-    /**
-     * @param float $totalSales
-     * @return $this
-     */
-    public function setTotalSales($totalSales)
+    public function setTotalSales(float $totalSales): static
     {
-        $this->totalSales = floatval($totalSales);
+        $this->totalSales = $totalSales;
         return $this;
     }
 }

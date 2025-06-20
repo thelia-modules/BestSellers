@@ -31,8 +31,7 @@ use Thelia\Model\Map\ProductTableMap;
 
 class EventManager extends BaseAction implements EventSubscriberInterface
 {
-    /** @var AdapterInterface */
-    protected $cacheAdapter;
+    protected AdapterInterface $cacheAdapter;
 
     /**
      * DigressivePriceListener constructor.
@@ -42,7 +41,7 @@ class EventManager extends BaseAction implements EventSubscriberInterface
         $this->cacheAdapter = $cacheAdapter;
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             BestSellers::GET_BEST_SELLING_PRODUCTS => ['calculateBestSellers', 128],
@@ -60,12 +59,12 @@ class EventManager extends BaseAction implements EventSubscriberInterface
         try {
             $cacheItem = $this->cacheAdapter->getItem($cacheKey);
 
-            if (true || !$cacheItem->isHit()) {
+            if (!$cacheItem->isHit()) {
                 /** @var PdoConnection $con */
                 $con = Propel::getConnection();
 
                 $statusList = BestSellers::getConfigValue('order_types');
-                if (!$statusList || $statusList === '') {
+                if (!$statusList) {
                     $statusList = '2,3,4';
                 }
 
@@ -127,7 +126,7 @@ class EventManager extends BaseAction implements EventSubscriberInterface
                 $this->cacheAdapter->save($cacheItem);
             }
 
-            $struct = json_decode($cacheItem->get(), true);
+            $struct = json_decode($cacheItem->get(), true, 512, JSON_THROW_ON_ERROR);
 
             $event
                 ->setBestSellingProductsData($struct['data'])
