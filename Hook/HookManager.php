@@ -27,7 +27,7 @@ use Thelia\Tools\URL;
 
 class HookManager extends BaseHook
 {
-    public function onMainTopMenuTools(HookRenderBlockEvent $event)
+    public function onMainTopMenuTools(HookRenderBlockEvent $event): void
     {
         $event->add(
             [
@@ -39,7 +39,7 @@ class HookManager extends BaseHook
         );
     }
 
-    public function onProductAdditional(HookRenderBlockEvent $event)
+    public function onProductAdditional(HookRenderBlockEvent $event): void
     {
         if (null === $product = ProductQuery::create()->findPk($event->getArgument('product'))) {
             return;
@@ -55,7 +55,7 @@ class HookManager extends BaseHook
         );
     }
 
-    public function onProductBottom(HookRenderEvent $event)
+    public function onProductBottom(HookRenderEvent $event): void
     {
         if (null === $product = ProductQuery::create()->findPk($event->getArgument('product'))) {
             return;

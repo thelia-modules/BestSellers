@@ -86,7 +86,7 @@ class Configuration extends BaseForm
             'mapped' => false,
         ]);
     }
-    public static function getName()
+    public static function getName(): string
     {
         return 'bestsellers_configuration';
     }
