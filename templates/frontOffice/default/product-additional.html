@@ -7,7 +7,7 @@
 <article class="grid">
     <div class="products-content">
         <ul class="list-unstyled row">
-            {loop name="purchased-with" type="purchased_with_products" product_ref=$product_ref limit=$productCount order="sold_count_reverse"}
+            {loop name="purchased-with" type="purchased_with_loop" product_ref=$product_ref limit=$productCount order="sold_count_reverse"}
                 {loop type="product" name="product_list" ref=$PRODUCT_REF}
                     {include file="includes/single-product.html" product_id=$ID hasBtn=true hasDescription=false hasQuickView=false width="218" height="146"}
                     {$exclude_list = "{$exclude_list},$ID"}

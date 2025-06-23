@@ -9,7 +9,7 @@
             {include file="components/smarty/Title/Title.html" type="h2" title={intl d='bestsellser.fo.modern' l='Purchased with this product'}}
 
             <div class="grid grid-cols-2 gap-8 lg:grid-cols-4">
-                {loop name="purchased-with" type="purchased_with_products" product_ref=$product_ref limit=$maxProducts order="sold_count_reverse"}
+                {loop name="purchased-with" type="purchased_with_loop" product_ref=$product_ref limit=$maxProducts order="sold_count_reverse"}
                     {loop type="product" name="product_list" ref=$PRODUCT_REF}
                         {include file="components/smarty/SingleProduct/SingleProduct.html" product_id=$ID}
                         {$exclude_list = "{$exclude_list},$ID"}

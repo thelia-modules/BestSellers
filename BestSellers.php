@@ -26,35 +26,35 @@ use Thelia\Module\BaseModule;
 class BestSellers extends BaseModule
 {
     /** @var string */
-    const DOMAIN_NAME = 'bestsellers';
+    public const DOMAIN_NAME = 'bestsellers';
 
-    const GET_BEST_SELLING_PRODUCTS = 'bestsellers.event.get_best_selling_products';
+    public const GET_BEST_SELLING_PRODUCTS = 'bestsellers.event.get_best_selling_products';
 
-    const BO_MESSAGE_DOMAIN = 'bestsellers.bo.default';
+    public const BO_MESSAGE_DOMAIN = 'bestsellers.bo.default';
 
     /* Data cache lifetime in minutes */
-    const CACHE_LIFETIME_IN_MINUTES = 1440;
+    public const CACHE_LIFETIME_IN_MINUTES = 1440;
 
-    const LAST_15_DAYS = 'last_15_days';
+    public const LAST_15_DAYS = 'last_15_days';
 
-    const LAST_30_DAYS = 'last_30_days';
+    public const LAST_30_DAYS = 'last_30_days';
 
-    const LAST_3_MONTHS = 'last_3_months';
+    public const LAST_3_MONTHS = 'last_3_months';
 
-    const LAST_6_MONTHS = 'last_6_months';
+    public const LAST_6_MONTHS = 'last_6_months';
 
-    const LAST_YEAR = 'last_year';
+    public const LAST_YEAR = 'last_year';
 
-    const THIS_YEAR = 'this_year';
+    public const THIS_YEAR = 'this_year';
 
-    const ORDER_BY_NUMBER_OF_SALES = 'order_by_number_of_sales';
+    public const ORDER_BY_NUMBER_OF_SALES = 'order_by_number_of_sales';
 
-    const ORDER_BY_SALES_REVENUE = 'order_by_sales_revenue';
+    public const ORDER_BY_SALES_REVENUE = 'order_by_sales_revenue';
 
 
-    const FIXED_DATE = 1;
+    public const FIXED_DATE = 1;
 
-    const DATE_RANGE = 2;
+    public const DATE_RANGE = 2;
 
     public function postActivation(ConnectionInterface $con = null): void
     {
@@ -64,8 +64,8 @@ class BestSellers extends BaseModule
     public static function configureServices(ServicesConfigurator $servicesConfigurator): void
     {
         $servicesConfigurator->load(self::getModuleCode().'\\', __DIR__)
-            ->exclude([THELIA_MODULE_DIR.ucfirst(self::getModuleCode()).'/I18n/*'])
-            ->autowire(true)
-            ->autoconfigure(true);
+            ->exclude([__DIR__.'/I18n/*'])
+            ->autowire()
+            ->autoconfigure();
     }
 }
