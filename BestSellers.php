@@ -64,8 +64,8 @@ class BestSellers extends BaseModule
     public static function configureServices(ServicesConfigurator $servicesConfigurator): void
     {
         $servicesConfigurator->load(self::getModuleCode().'\\', __DIR__)
-            ->exclude(["/I18n/*"])
-            ->autowire(true)
-            ->autoconfigure(true);
+            ->exclude([__DIR__.'/I18n/*'])
+            ->autowire()
+            ->autoconfigure();
     }
 }

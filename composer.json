@@ -5,14 +5,6 @@
     "require": {
         "thelia/installer": "~1.1"
     },
-    "autoload": {
-        "psr-4": {
-            "BestSellers\\": ""
-        },
-        "exclude-from-classmap": [
-            "I18n/"
-        ]
-    },
     "extra": {
         "installer-name": "BestSellers"
     }
