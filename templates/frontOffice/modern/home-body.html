@@ -6,7 +6,7 @@
 
         <div class="products-content">
             <ul class="products-grid list-unstyled row">
-                {loop name="best-selling" type="best_selling_products" limit="4" order="sold_count_reverse"}
+                {loop name="best-selling" type="best_seller_loop" limit="4" order="sold_count_reverse"}
                 {include file="components/SingleProduct/SingleProduct.html" colClass="col-md-3 col-sm-4" product_id=$ID hasBtn=false hasDescription=false width="218" height="146"}
                 {/loop}
             </ul>

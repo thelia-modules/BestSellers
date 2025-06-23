@@ -71,7 +71,7 @@ All the variables of the loop `product`are available.
 To get your 10 best sales of all time:
 
     <ul>
-        {loop type="best_selling_products" name="best-sellers" limit=10 order='sold_count_reverse'}
+        {loop type="best_seller_loop" name="best-sellers" limit=10 order='sold_count_reverse'}
             <li>{$REF} : {$TITLE} : {$SOLD_QUANTITY}</li>
         {/loop}²²
     </ul>
@@ -79,7 +79,7 @@ To get your 10 best sales of all time:
 To get your 5 best sales of the month :
 
     <ul>
-        {loop type="best_selling_products" name="best-sellers-this-month" order='sold_count_reverse' start_date={$smarty.now|date_format:'%Y-%m-01'} limit=5}
+        {loop type="best_seller_loop" name="best-sellers-this-month" order='sold_count_reverse' start_date={$smarty.now|date_format:'%Y-%m-01'} limit=5}
             <li>{$REF} : {$TITLE} : {$SOLD_QUANTITY}</li>
         {/loop}
     </ul>
@@ -87,12 +87,12 @@ To get your 5 best sales of the month :
 To get your 10 worst sales of all time :
 
     <ul>
-        {loop type="best_selling_products" name="best-sellers" limit=10 order='sold_count'}
+        {loop type="best_seller_loop" name="best-sellers" limit=10 order='sold_count'}
             <li>{$REF} : {$TITLE} : {$SOLD_QUANTITY}</li>
         {/loop}
     </ul>
 
-### purchased_with_products loop
+### purchased_with_loop loop
 
 This loop returns products purchased with a given product, based on past orders (paid or not)
 
@@ -117,7 +117,7 @@ This loop returns products purchased with a given product, based on past orders 
 Get the top 4 products sold along with a given product
 
     <ul>
-            {loop name="purchased-with" type="purchased_with_products" product_ref=$REF limit="4"}
+            {loop name="purchased-with" type="purchased_with_loop" product_ref=$REF limit="4"}
                 {loop type="product" name="product_list" ref=$PRODUCT_REF}
                     <li>{$REF} : {$TITLE} : {$SOLD_COUNT}</li>
                 {/loop}
@@ -158,7 +158,7 @@ ou le hook `product.additional` (template default)
 ## Loop
 
 Le module vous propose la boucle `best_selling_products`, qui étend la boucle `product`. Tous les arguments de la boucle `product` sont donc disponibles.
-Il propose aussi la boucle `purchased_with_products`, qui permet d'afficher les articles qui ont été achetés
+Il propose aussi la boucle `purchased_with_loop`, qui permet d'afficher les articles qui ont été achetés
 avec un article donné.
 
 ### `best_selling_products` loop
@@ -196,7 +196,7 @@ Toutes les variables de la boucle `product` sont disponibles.
 Pour obtenir vos 10 meilleures ventes de tous les temps :
 
     <ul>
-        {loop type="best_selling_products" name="best-sellers" limit=10 order='sold_count_reverse'}
+        {loop type="best_seller_loop" name="best-sellers" limit=10 order='sold_count_reverse'}
             <li>{$REF} : {$TITLE} : {$SOLD_QUANTITY}</li>
         {/loop}
     </ul>
@@ -204,7 +204,7 @@ Pour obtenir vos 10 meilleures ventes de tous les temps :
 Pour obtenir les 5 meilleures ventes du mois :
 
     <ul>
-        {loop type="best_selling_products" name="best-sellers-this-month" order='sold_count_reverse' start_date={$smarty.now|date_format:'%Y-%m-01'} limit=5}
+        {loop type="best_seller_loop" name="best-sellers-this-month" order='sold_count_reverse' start_date={$smarty.now|date_format:'%Y-%m-01'} limit=5}
             <li>{$REF} : {$TITLE} : {$SOLD_QUANTITY}</li>
         {/loop}
     </ul>
@@ -212,13 +212,13 @@ Pour obtenir les 5 meilleures ventes du mois :
 Pour obtenir vos 10 pires ventes de tous les temps :
 
     <ul>
-        {loop type="best_selling_products" name="best-sellers" limit=10 order='sold_count'}
+        {loop type="best_seller_loop" name="best-sellers" limit=10 order='sold_count'}
             <li>{$REF} : {$TITLE} : {$SOLD_QUANTITY}</li>
         {/loop}
     </ul>
 
 
-### purchased_with_products loop
+### purchased_with_loop loop
 
 Cette boucle permet de retourner les articles achetés avec un article donné, en se basant sur les commandes passées
 (payées ou non)
@@ -244,7 +244,7 @@ Cette boucle permet de retourner les articles achetés avec un article donné, e
 Pour obtenir les 4 articles les plus vendus avec un article donné
 
     <ul>
-            {loop name="purchased-with" type="purchased_with_products" product_ref=$REF limit="4"}
+            {loop name="purchased-with" type="purchased_with_loop" product_ref=$REF limit="4"}
                 {loop type="product" name="product_list" ref=$PRODUCT_REF}
                     <li>{$REF} : {$TITLE} : {$SOLD_COUNT}</li>
                 {/loop}
