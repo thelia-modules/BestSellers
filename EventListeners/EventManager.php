@@ -42,7 +42,7 @@ class EventManager extends BaseAction implements EventSubscriberInterface
         $this->cacheAdapter = $cacheAdapter;
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             BestSellers::GET_BEST_SELLING_PRODUCTS => ['calculateBestSellers', 128],
