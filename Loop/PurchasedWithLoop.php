@@ -31,7 +31,7 @@ use Thelia\Type\TypeCollection;
  */
 class PurchasedWithLoop extends BaseLoop implements PropelSearchLoopInterface
 {
-    protected function getArgDefinitions()
+    protected function getArgDefinitions(): ArgumentCollection
     {
         return new ArgumentCollection(
             Argument::createAnyTypeArgument('product_ref', null, true),

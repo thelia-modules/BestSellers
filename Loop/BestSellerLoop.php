@@ -23,6 +23,7 @@ use BestSellers\EventListeners\BestSellersEvent;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Thelia\Core\Template\Element\LoopResultRow;
 use Thelia\Core\Template\Loop\Argument\Argument;
+use Thelia\Core\Template\Loop\Argument\ArgumentCollection;
 use Thelia\Core\Template\Loop\Product;
 use Thelia\Model\Map\ProductTableMap;
 use Thelia\Type\EnumListType;
@@ -36,7 +37,7 @@ use Thelia\Type\TypeCollection;
  */
 class BestSellerLoop extends Product
 {
-    protected function getArgDefinitions()
+    protected function getArgDefinitions(): ArgumentCollection
     {
         $args = parent::getArgDefinitions();
 
