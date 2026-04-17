@@ -21,6 +21,7 @@ namespace BestSellers\Loop;
 use BestSellers\BestSellers;
 use BestSellers\EventListeners\BestSellersEvent;
 use Propel\Runtime\ActiveQuery\Criteria;
+use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Thelia\Core\Template\Element\LoopResultRow;
 use Thelia\Core\Template\Loop\Argument\Argument;
 use Thelia\Core\Template\Loop\Argument\ArgumentCollection;
@@ -84,7 +85,7 @@ class BestSellerLoop extends Product
         ;
     }
 
-    public function buildModelCriteria()
+    public function buildModelCriteria(): ModelCriteria
     {
         $query = parent::buildModelCriteria();
 

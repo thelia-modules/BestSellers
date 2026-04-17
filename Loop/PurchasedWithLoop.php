@@ -11,6 +11,7 @@
 namespace BestSellers\Loop;
 
 use Propel\Runtime\ActiveQuery\Criteria;
+use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Thelia\Core\Template\Element\BaseLoop;
 use Thelia\Core\Template\Element\LoopResult;
 use Thelia\Core\Template\Element\LoopResultRow;
@@ -49,7 +50,7 @@ class PurchasedWithLoop extends BaseLoop implements PropelSearchLoopInterface
         );
     }
 
-    public function buildModelCriteria()
+    public function buildModelCriteria(): ModelCriteria
     {
         $ref = $this->getProductRef();
 
@@ -104,7 +105,7 @@ class PurchasedWithLoop extends BaseLoop implements PropelSearchLoopInterface
      * @return LoopResult|void
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    public function parseResults(LoopResult $loopResult)
+    public function parseResults(LoopResult $loopResult): LoopResult
     {
         /** @var OrderProduct $result */
         foreach ($loopResult->getResultDataCollection() as $result) {
