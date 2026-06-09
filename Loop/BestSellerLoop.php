@@ -138,7 +138,7 @@ class BestSellerLoop extends Product
             $query
                 ->withColumn(
                     'CASE '.
-                    ProductTableMap::ID.
+                    ProductTableMap::COL_ID.
                     ' '.
                     $caseClause.
                     ' ELSE 0 END',
@@ -146,7 +146,7 @@ class BestSellerLoop extends Product
                 )
                 ->withColumn(
                     'CASE '.
-                    ProductTableMap::ID.
+                    ProductTableMap::COL_ID.
                     ' '.
                     $caseSalesClause.
                     ' ELSE 0 END',
@@ -154,7 +154,7 @@ class BestSellerLoop extends Product
                 );
 
             if (true === $this->getOnlySoldProducts()) {
-                $query->where('(CASE ' . ProductTableMap::ID . ' ' . $caseClause . ' ELSE 0 END) > 0');
+                $query->where('(CASE ' . ProductTableMap::COL_ID . ' ' . $caseClause . ' ELSE 0 END) > 0');
             }
         } else {
             $query
