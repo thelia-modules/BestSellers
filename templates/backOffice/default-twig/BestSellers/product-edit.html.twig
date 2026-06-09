@@ -6,9 +6,9 @@
         </div>
         <div class="card-body">
             <ul class="mb-0">
-                <li>{{ 'Total sales for this product: <strong>%count</strong>'|trans({'%count': stats.quantity|round}, 'bestsellers.bo.default')|raw }}</li>
-                <li>{{ 'Sold amount for this product: <strong>%count</strong>'|trans({'%count': stats.amount|number_format(2, '.', ' ')}, 'bestsellers.bo.default')|raw }}</li>
-                <li>{{ '% of sales: <strong>%count%</strong>'|trans({'%count': stats.ratio|number_format(2, '.', '')}, 'bestsellers.bo.default')|raw }}</li>
+                <li>{{ 'Total sales for this product:'|trans({}, 'bestsellers.bo.default') }} <strong>{{ stats.quantity|round }}</strong></li>
+                <li>{{ 'Sold amount for this product:'|trans({}, 'bestsellers.bo.default') }} <strong>{{ stats.amount|number_format(2, '.', ' ') }}</strong></li>
+                <li>{{ '% of sales:'|trans({}, 'bestsellers.bo.default') }} <strong>{{ stats.ratio|number_format(2, '.', '') }}%</strong></li>
             </ul>
         </div>
     </div>
