@@ -10,4 +10,10 @@
         <default key="_controller">BestSellers\Controller\ConfigController::setAction</default>
     </route>
 
+    <!-- Best sellers admin page -->
+
+    <route id="bestsellers.admin.list" path="/admin/best-sellers" methods="get">
+        <default key="_controller">BestSellers\Controller\BestSellersController::listAction</default>
+    </route>
+
 </routes>

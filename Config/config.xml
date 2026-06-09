@@ -15,27 +15,4 @@
             <tag name="kernel.event_subscriber"/>
         </service>
     </services>
-
-    <hooks>
-        <hook id="best_sellers.hook.back" class="BestSellers\Hook\HookManager">
-            <tag name="hook.event_listener" event="main.top-menu-tools" type="back" method="onMainTopMenuTools" />
-            <tag name="hook.event_listener" event="product.modification.form-right.bottom" type="back" templates="render:product-edit.html" />
-
-            <tag name="hook.event_listener" event="product.bottom" type="front" method="onProductBottom" />
-            <tag name="hook.event_listener" event="product.additional" type="front" method="onProductAdditional" />
-        </hook>
-
-        <hook id="best_sellers.hook.front">
-            <tag name="hook.event_listener" event="home.body" type="front" templates="render:home-body.html" />
-        </hook>
-
-        <hook id="best_sellers.configuration.hook" class="BestSellers\Hook\ConfigHook" scope="request">
-            <tag name="hook.event_listener" event="module.configuration" type="back" method="onModuleConfiguration"/>
-        </hook>
-
-    </hooks>
-
-    <forms>
-        <form name="bestsellers_configuration" class="BestSellers\Form\Configuration" />
-    </forms>
 </config>

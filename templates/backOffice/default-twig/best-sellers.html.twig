@@ -1,0 +1,90 @@
+{% extends '@BackOfficeDefaultTwig/base.html.twig' %}
+
+{% block title %}{{ 'Best sellers'|trans({}, 'bestsellers.bo.default') }}{% endblock %}
+
+{% block body_testid %}best-sellers-page{% endblock %}
+
+{% set base_query = {'startDate': startDate, 'endDate': endDate} %}
+
+{% macro sort_header(label, asc, desc, current, base_query) %}
+    {% set next = current == asc ? desc : asc %}
+    {% set query = base_query|merge({'order': next}) %}
+    <a href="{{ path('bestsellers.admin.list', query) }}">
+        {{ label }}
+        {% if current == asc %}<i class="bi bi-caret-up-fill"></i>
+        {% elseif current == desc %}<i class="bi bi-caret-down-fill"></i>{% endif %}
+    </a>
+{% endmacro %}
+
+{% import _self as helper %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        <form class="row row-cols-lg-auto g-2 align-items-end mb-4" action="{{ path('bestsellers.admin.list') }}" method="GET">
+                            <input type="hidden" name="order" value="{{ order }}">
+
+                            <div class="col-12">
+                                <label class="form-label" for="start-date">{{ 'View from : '|trans({}, 'bestsellers.bo.default') }}</label>
+                                <input id="start-date" class="form-control" name="startDate" value="{{ startDate }}" type="date">
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label" for="end-date">{{ ' to : '|trans({}, 'bestsellers.bo.default') }}</label>
+                                <input id="end-date" class="form-control" name="endDate" value="{{ endDate }}" type="date">
+                            </div>
+
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary">{{ 'View'|trans({}, 'bestsellers.bo.default') }}</button>
+                            </div>
+                        </form>
+
+                        {% if rows is not empty %}
+                            <table class="table table-bordered table-sm table-hover">
+                                <thead>
+                                <tr>
+                                    <th>{{ helper.sort_header('Product reference'|trans({}, 'bestsellers.bo.default'), 'ref', 'ref_reverse', order, base_query) }}</th>
+                                    <th>{{ helper.sort_header('Product title'|trans({}, 'bestsellers.bo.default'), 'alpha', 'alpha_reverse', order, base_query) }}</th>
+                                    <th class="text-end">{{ helper.sort_header('Sales total'|trans({}, 'bestsellers.bo.default'), 'sold_count', 'sold_count_reverse', order, base_query) }}</th>
+                                    <th class="text-end">{{ helper.sort_header('Total amount'|trans({}, 'bestsellers.bo.default'), 'sold_amount', 'sold_amount_reverse', order, base_query) }}</th>
+                                    <th class="text-end">{{ helper.sort_header('Sale ratio'|trans({}, 'bestsellers.bo.default'), 'sale_ratio', 'sale_ratio_reverse', order, base_query) }}</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for row in rows %}
+                                    <tr>
+                                        <td><a href="/admin/products/update?product_id={{ row.id }}">{{ row.ref }}</a></td>
+                                        <td><a href="/admin/products/update?product_id={{ row.id }}">{{ row.title }}</a></td>
+                                        <td class="text-end">{{ row.quantity|round }}</td>
+                                        <td class="text-end">{{ row.amount|number_format(2, '.', ' ') }}</td>
+                                        <td class="text-end">{{ row.ratio|number_format(2, '.', '') }}%</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+
+                            {% if pageCount > 1 %}
+                                <nav>
+                                    <ul class="pagination">
+                                        {% for p in 1..pageCount %}
+                                            <li class="page-item {{ p == page ? 'active' : '' }}">
+                                                <a class="page-link" href="{{ path('bestsellers.admin.list', base_query|merge({'order': order, 'page': p})) }}">{{ p }}</a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </nav>
+                            {% endif %}
+                        {% else %}
+                            <div class="alert alert-info">
+                                {{ 'You have not sold any products yet'|trans({}, 'bestsellers.bo.default') }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
