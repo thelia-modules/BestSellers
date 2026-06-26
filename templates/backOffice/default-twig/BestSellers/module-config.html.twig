@@ -48,34 +48,31 @@
 
         <hr>
 
-        <div class="table-responsive">
-            <table class="table table-striped table-sm">
-                <caption class="clearfix">{{ 'Order status'|trans({}, 'bestsellers.bo.default') }}</caption>
-                <thead>
-                <tr>
-                    <th>{{ 'Id'|trans({}, 'bestsellers.bo.default') }}</th>
-                    <th>{{ 'Code'|trans({}, 'bestsellers.bo.default') }}</th>
-                    <th>{{ 'Title'|trans({}, 'bestsellers.bo.default') }}</th>
-                    <th>{{ 'Orders'|trans({}, 'bestsellers.bo.default') }}</th>
-                    <th>{{ 'Position'|trans({}, 'bestsellers.bo.default') }}</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for status in order_statuses %}
-                    <tr>
-                        <td><a href="/admin/configuration/order-status/update/{{ status.id }}">{{ status.id }}</a></td>
-                        <td><a href="/admin/configuration/order-status/update/{{ status.id }}">{{ status.code }}</a></td>
-                        <td>
-                            <a class="badge text-decoration-none" style="background-color: {{ status.color }};"
-                               href="/admin/configuration/order-status/update/{{ status.id }}">{{ status.title }}</a>
-                        </td>
-                        <td><a href="/admin/orders?status={{ status.id }}">{{ status.orders }}</a></td>
-                        <td>{{ status.position }}</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
+        {% set table_rows = [] %}
+        {% for status in order_statuses %}
+            {% set status_url = '/admin/configuration/order-status/update/' ~ status.id %}
+            {% set table_rows = table_rows|merge([{
+                'id':       '<a href="' ~ status_url ~ '">' ~ status.id|e ~ '</a>',
+                'code':     '<a href="' ~ status_url ~ '">' ~ status.code|e ~ '</a>',
+                'title':    '<a class="badge text-decoration-none" style="background-color: ' ~ (status.color ? status.color : '#f0ad4e')|e ~ ';" href="' ~ status_url ~ '">' ~ status.title|e ~ '</a>',
+                'orders':   '<a href="/admin/orders?status=' ~ status.id|e ~ '">' ~ status.orders|e ~ '</a>',
+                'position': status.position,
+            }]) %}
+        {% endfor %}
+
+        {{ component('BoDataTable', {
+            id: 'order-statuses',
+            caption: 'Order status'|trans({}, 'bestsellers.bo.default'),
+            columns: [
+                column_html('id',       'Id'|trans({}, 'bestsellers.bo.default')),
+                column_html('code',     'Code'|trans({}, 'bestsellers.bo.default')),
+                column_html('title',    'Title'|trans({}, 'bestsellers.bo.default')),
+                column_html('orders',   'Orders'|trans({}, 'bestsellers.bo.default')),
+                column_text('position', 'Position'|trans({}, 'bestsellers.bo.default')),
+            ],
+            rows: table_rows,
+            emptyMessage: 'No order status defined.'|trans({}, 'bestsellers.bo.default'),
+        }) }}
     </div>
 </div>
 
