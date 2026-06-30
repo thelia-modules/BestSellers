@@ -64,10 +64,9 @@ class EventManager extends BaseAction implements EventSubscriberInterface
                 /** @var PdoConnection $con */
                 $con = Propel::getConnection();
 
-                $statusList = BestSellers::getConfigValue('order_types');
-                if (!$statusList || $statusList === '') {
-                    $statusList = '2,3,4';
-                }
+                $rawStatusList = BestSellers::getConfigValue('order_types');
+                $statusIntegers = array_filter(array_map('intval', explode(',', (string) $rawStatusList)));
+                $statusList = $statusIntegers ? implode(',', $statusIntegers) : '2,3,4';
 
                 $query = '
                     SELECT
