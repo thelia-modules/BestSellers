@@ -16,6 +16,7 @@ use BestSellers\BestSellers;
 use BestSellers\Service\BestSellersStatsService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
 use Thelia\Controller\Admin\BaseAdminController;
 use Thelia\Core\Security\AccessManager;
 use Thelia\Model\OrderQuery;
@@ -29,6 +30,7 @@ class BestSellersController extends BaseAdminController
     ) {
     }
 
+    #[Route('/admin/best-sellers', name: 'bestsellers.admin.list', methods: ['GET'])]
     public function listAction(Request $request): Response
     {
         if (null !== $response = $this->checkAuth(['admin.module'], [], AccessManager::VIEW)) {
