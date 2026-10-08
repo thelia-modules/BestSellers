@@ -19,8 +19,10 @@
 
 namespace BestSellers;
 
+use ApiPlatform\Metadata\AsOperationMutator;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ServicesConfigurator;
+use Thelia\Domain\Catalog\Product\ProductSortProviderInterface;
 use Thelia\Module\BaseModule;
 
 class BestSellers extends BaseModule
@@ -63,8 +65,16 @@ class BestSellers extends BaseModule
 
     public static function configureServices(ServicesConfigurator $servicesConfigurator): void
     {
+        $excluded = [__DIR__.'/I18n/*', __DIR__.'/Tests/*'];
+
+        // The sort by sales needs a core that reads module sorts and an API Platform that mutates operations.
+        if (!interface_exists(ProductSortProviderInterface::class) || !class_exists(AsOperationMutator::class)) {
+            $excluded[] = __DIR__.'/Api/*';
+            $excluded[] = __DIR__.'/Sort/*';
+        }
+
         $servicesConfigurator->load(self::getModuleCode().'\\', __DIR__)
-            ->exclude([__DIR__.'/I18n/*'])
+            ->exclude($excluded)
             ->autowire(true)
             ->autoconfigure(true);
     }
