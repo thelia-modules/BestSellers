@@ -64,18 +64,12 @@
             emptyMessage: 'You have not sold any products yet'|trans({}, 'bestsellers.bo.default'),
         }) }}
 
-        {% if pageCount > 1 %}
-            <div class="d-flex justify-content-center mt-3">
-                <nav>
-                    <ul class="pagination">
-                        {% for p in 1..pageCount %}
-                            <li class="page-item {{ p == page ? 'active' : '' }}">
-                                <a class="page-link" href="{{ path('bestsellers.admin.list', base_query|merge({'order': order, 'page': p})) }}">{{ p }}</a>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </nav>
-            </div>
-        {% endif %}
+        {{ component('BoPagination', {
+            route: 'bestsellers.admin.list',
+            currentPage: page,
+            lastPage: pageCount,
+            routeParams: base_query|merge({'order': order}),
+            testid: 'best-sellers-pagination',
+        }) }}
     </div>
 {% endblock %}
