@@ -89,7 +89,8 @@ class BestSellerLoop extends Product
     {
         $query = parent::buildModelCriteria();
 
-        $startDate = new \DateTime();
+        // No period configured (a fresh install): every sale counts, as the module documents.
+        $startDate = new \DateTime('1970-01-01');
         $endDate = new \DateTime();
 
         $dateType = BestSellers::getConfigValue('date_type');
@@ -253,5 +254,7 @@ class BestSellerLoop extends Product
             case BestSellers::LAST_YEAR:
                 return new \DateTime('first day of January last year');
         }
+
+        return new \DateTime('1970-01-01');
     }
 }

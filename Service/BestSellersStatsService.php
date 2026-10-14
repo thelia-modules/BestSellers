@@ -46,7 +46,8 @@ class BestSellersStatsService
             return ['start' => $start, 'end' => $end];
         }
 
-        $start = new \DateTime();
+        // No period configured (a fresh install): every sale counts, as the module documents.
+        $start = new \DateTime('1970-01-01');
         $end = new \DateTime();
 
         switch ($dateType) {

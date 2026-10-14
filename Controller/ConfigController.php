@@ -14,12 +14,14 @@ namespace BestSellers\Controller;
 
 use BestSellers\BestSellers;
 use BestSellers\Form\Configuration;
+use Symfony\Component\Routing\Attribute\Route;
 use Thelia\Controller\Admin\BaseAdminController;
 use Thelia\Core\Translation\Translator;
 use Thelia\Form\Exception\FormValidationException;
 
 class ConfigController extends BaseAdminController
 {
+    #[Route('/admin/module/bestsellers/config', name: 'bestsellers.configuration', methods: ['POST'])]
     public function setAction()
     {
         $form = $this->createForm(Configuration::getName());
