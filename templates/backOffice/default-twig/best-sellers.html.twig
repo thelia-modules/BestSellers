@@ -64,12 +64,46 @@
             emptyMessage: 'You have not sold any products yet'|trans({}, 'bestsellers.bo.default'),
         }) }}
 
-        {{ component('BoPagination', {
-            route: 'bestsellers.admin.list',
-            currentPage: page,
-            lastPage: pageCount,
-            routeParams: base_query|merge({'order': order}),
-            testid: 'best-sellers-pagination',
-        }) }}
+        {# Same pager as the Thelia 2 back-office: a window of up to 10 numbers starting 5 pages
+           before the current one, « ‹ … › » buttons, disabled at the ends. #}
+        {% if pageCount > 0 %}
+            {% set window_size = 10 %}
+            {% set first_shown = pageCount > window_size ? max(1, page - 5) : 1 %}
+            {% set last_shown = min(first_shown + window_size - 1, pageCount) %}
+            {% set link_params = base_query|merge({'order': order}) %}
+            <nav class="mt-4" aria-label="{{ 'Pagination'|trans }}" data-testid="best-sellers-pagination">
+                <ul class="pagination justify-content-center flex-wrap mb-0">
+                    {% if page > 1 %}
+                        <li class="page-item"><a class="page-link" title="{{ 'Go to first page'|trans }}" href="{{ path('bestsellers.admin.list', link_params|merge({'page': 1})) }}">&laquo;</a></li>
+                        <li class="page-item"><a class="page-link" title="{{ 'Go to previous page'|trans }}" href="{{ path('bestsellers.admin.list', link_params|merge({'page': page - 1})) }}">&lsaquo;</a></li>
+                        {% if first_shown > 1 %}
+                            <li class="page-item disabled" title="{{ 'More pages before'|trans }}"><span class="page-link">&hellip;</span></li>
+                        {% endif %}
+                    {% else %}
+                        <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
+                        <li class="page-item disabled"><span class="page-link">&lsaquo;</span></li>
+                    {% endif %}
+
+                    {% for number in first_shown..last_shown %}
+                        {% if number == page %}
+                            <li class="page-item active" aria-current="page"><span class="page-link">{{ number }}</span></li>
+                        {% else %}
+                            <li class="page-item"><a class="page-link" href="{{ path('bestsellers.admin.list', link_params|merge({'page': number})) }}">{{ number }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if page < pageCount %}
+                        {% if last_shown < pageCount and pageCount > window_size %}
+                            <li class="page-item disabled" title="{{ 'More pages after'|trans }}"><span class="page-link">&hellip;</span></li>
+                        {% endif %}
+                        <li class="page-item"><a class="page-link" title="{{ 'Go to next page'|trans }}" href="{{ path('bestsellers.admin.list', link_params|merge({'page': page + 1})) }}">&rsaquo;</a></li>
+                        <li class="page-item"><a class="page-link" title="{{ 'Go to last page'|trans }}" href="{{ path('bestsellers.admin.list', link_params|merge({'page': pageCount})) }}">&raquo;</a></li>
+                    {% else %}
+                        <li class="page-item disabled"><span class="page-link">&rsaquo;</span></li>
+                        <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
     </div>
 {% endblock %}
