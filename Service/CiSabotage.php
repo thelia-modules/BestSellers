@@ -7,6 +7,7 @@ namespace BestSellers\Service;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Thelia\Domain\Ci\ClassMissingFromThePublishedCore;
 
+// Reverted before merge.
 final class CiSabotage implements EventSubscriberInterface
 {
     public function __construct(private readonly ClassMissingFromThePublishedCore $missing)
