@@ -18,6 +18,7 @@ use BestSellers\Service\ConfigurationWriter;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Thelia\Controller\Admin\BaseAdminController;
+use Thelia\Core\Security\AccessManager;
 use Thelia\Form\Exception\FormValidationException;
 
 class ConfigController extends BaseAdminController
@@ -30,6 +31,11 @@ class ConfigController extends BaseAdminController
     #[Route('/admin/module/bestsellers/config', name: 'bestsellers.configuration', methods: ['POST'])]
     public function setAction(): Response
     {
+        // The page itself asks for the right to see the module; changing its configuration asks for the right to update it.
+        if (null !== $response = $this->checkAuth([], ['BestSellers'], AccessManager::UPDATE)) {
+            return $response;
+        }
+
         $form = $this->createForm(Configuration::getName());
 
         try {
