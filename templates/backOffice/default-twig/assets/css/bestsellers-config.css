@@ -1,0 +1,25 @@
+/* Configuration page of the BestSellers module, on the default-twig back office. */
+
+/* The color of each order status, before its name. */
+.bestsellers-config__status-dot {
+    display: inline-block;
+    width: 0.6rem;
+    height: 0.6rem;
+    margin-inline-end: 0.35rem;
+    border-radius: 50%;
+    background-color: var(--status-color, var(--bs-secondary));
+    vertical-align: middle;
+}
+
+/* The fields of a period option only show while that option is chosen. */
+.bestsellers-config__option-fields {
+    display: none;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin-block: 0.5rem 0.75rem;
+}
+
+.bestsellers-config__option:has(> .form-check-input:checked) .bestsellers-config__option-fields {
+    display: flex;
+}

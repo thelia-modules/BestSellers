@@ -2,6 +2,7 @@
 
 return array(
     'Best sellers' => 'Meilleures ventes',
+    'Choose at least one order status.' => 'Choisissez au moins un statut de commande.',
     'Date range' => 'Plage de dates',
     'Error' => 'Erreur',
     'Fixed dates' => 'Dates fixes',
@@ -9,6 +10,7 @@ return array(
     'Last 30 days' => 'Les 30 derniers jours',
     'Number of sales' => 'Nombre de ventes',
     'Order by' => 'Trier par',
+    'Order chosen by the theme' => 'Ordre choisi par le thème',
     'Purchased with this product' => 'Souvent achetés avec cet article',
     'Sales revenue' => 'Chiffre d\'affaire',
     'Since the beginning of the year' => 'Depuis le début de l\'année',

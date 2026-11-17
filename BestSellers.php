@@ -54,6 +54,9 @@ class BestSellers extends BaseModule
     const ORDER_BY_SALES_REVENUE = 'order_by_sales_revenue';
 
 
+    /* Every sale counts, whatever its date: also what a shop that never saved the configuration gets */
+    const ALL_SALES = 0;
+
     const FIXED_DATE = 1;
 
     const DATE_RANGE = 2;

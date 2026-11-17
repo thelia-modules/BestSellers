@@ -69,4 +69,16 @@ final class ConfiguredPeriodTest extends IntegrationTestCase
         self::assertSame((new \DateTime('-1 year'))->format('Y-m-d'), $period['start']->format('Y-m-d'));
         self::assertSame((new \DateTime())->format('Y-m-d'), $period['end']->format('Y-m-d'));
     }
+
+    public function testAllSalesSavedAsSuchCountsEverySale(): void
+    {
+        BestSellers::setConfigValue('date_type', (string) BestSellers::ALL_SALES);
+        BestSellers::setConfigValue('start_date', '2026-03-01');
+        BestSellers::setConfigValue('date_range', BestSellers::LAST_30_DAYS);
+
+        $period = (new ConfiguredPeriod())->resolve();
+
+        self::assertSame('1970-01-01', $period['start']->format('Y-m-d'));
+        self::assertSame((new \DateTime())->format('Y-m-d'), $period['end']->format('Y-m-d'));
+    }
 }

@@ -17,32 +17,33 @@ namespace BestSellers\Service;
 use BestSellers\BestSellers;
 
 /**
- * Saves what the configuration page sends. A value the page did not send keeps the one saved,
- * except the fixed dates: a date left empty clears the saved one.
+ * Saves what the configuration page sends. A fixed date left empty clears the saved one.
  */
 final readonly class ConfigurationWriter
 {
+    /**
+     * @param list<int|string> $orderStatusIds
+     * @param string|null      $startDate      Y-m-d, or empty to clear it
+     * @param string|null      $endDate        Y-m-d, or empty to clear it
+     */
     public function save(
-        ?string $orderTypes,
-        int|string|null $dateType,
-        ?\DateTimeInterface $startDate,
-        ?\DateTimeInterface $endDate,
+        array $orderStatusIds,
+        int $dateType,
+        ?string $startDate,
+        ?string $endDate,
         ?string $dateRange,
         ?string $orderBy,
     ): void {
-        BestSellers::setConfigValue('start_date', $startDate?->format('Y-m-d') ?? '');
-        BestSellers::setConfigValue('end_date', $endDate?->format('Y-m-d') ?? '');
+        $statusIds = array_map('intval', $orderStatusIds);
+        sort($statusIds);
 
-        if (null !== $orderTypes) {
-            BestSellers::setConfigValue('order_types', $orderTypes);
-        }
+        BestSellers::setConfigValue('order_types', implode(',', $statusIds));
+        BestSellers::setConfigValue('date_type', (string) $dateType);
+        BestSellers::setConfigValue('start_date', $startDate ?? '');
+        BestSellers::setConfigValue('end_date', $endDate ?? '');
 
         if (null !== $dateRange) {
             BestSellers::setConfigValue('date_range', $dateRange);
-        }
-
-        if (null !== $dateType) {
-            BestSellers::setConfigValue('date_type', (string) $dateType);
         }
 
         BestSellers::setConfigValue('order_by', (string) $orderBy);

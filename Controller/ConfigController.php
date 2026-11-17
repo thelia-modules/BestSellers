@@ -12,11 +12,12 @@
 
 namespace BestSellers\Controller;
 
+use BestSellers\BestSellers;
 use BestSellers\Form\Configuration;
 use BestSellers\Service\ConfigurationWriter;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Thelia\Controller\Admin\BaseAdminController;
-use Thelia\Core\Translation\Translator;
 use Thelia\Form\Exception\FormValidationException;
 
 class ConfigController extends BaseAdminController
@@ -27,52 +28,36 @@ class ConfigController extends BaseAdminController
     }
 
     #[Route('/admin/module/bestsellers/config', name: 'bestsellers.configuration', methods: ['POST'])]
-    public function setAction()
+    public function setAction(): Response
     {
         $form = $this->createForm(Configuration::getName());
 
         try {
             $configForm = $this->validateForm($form);
-            $formData = $configForm->all();
 
             $this->configurationWriter->save(
-                $configForm->get('order')->getData(),
-                $formData['date_type']->getData(),
-                $formData['start_date']->getData(),
-                $formData['end_date']->getData(),
-                $formData['date_range']->getData(),
-                $formData['order_by']->getData(),
+                $configForm->get('order_types')->getData(),
+                (int) $configForm->get('date_type')->getData(),
+                $configForm->get('start_date')->getData(),
+                $configForm->get('end_date')->getData(),
+                $configForm->get('date_range')->getData(),
+                $configForm->get('order_by')->getData(),
             );
 
-            $response = $this->redirectAction();
-
+            $this->getSession()->getFlashBag()->add(
+                'success',
+                $this->getTranslator()->trans('The configuration has been saved.', [], BestSellers::BO_MESSAGE_DOMAIN),
+            );
         } catch (FormValidationException $e) {
+            // The configuration page shows the form again, with what was entered and the error of each field.
             $this->setupFormErrorContext(
-                Translator::getInstance()->trans(
-                    'Error',
-                    [],
-                ),
+                $this->getTranslator()->trans('Best sellers configuration', [], BestSellers::BO_MESSAGE_DOMAIN),
                 $e->getMessage(),
-                $form
+                $form,
+                $e,
             );
-
-            return $this->generateSuccessRedirect($form);
-        } catch (\Exception $e) {
-            $this->setupFormErrorContext(
-                Translator::getInstance()->trans(
-                    'Error',
-                    [],
-                ),
-                $e->getMessage(),
-                $form
-            );
-            return $this->generateSuccessRedirect($form);
         }
 
-        return $response;
-    }
-    public function redirectAction()
-    {
         return $this->generateRedirectFromRoute('admin.module.configure', [], ['module_code' => 'BestSellers']);
     }
 }
