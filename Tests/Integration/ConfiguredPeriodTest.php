@@ -58,4 +58,15 @@ final class ConfiguredPeriodTest extends IntegrationTestCase
         self::assertSame((new \DateTime('-30 days'))->format('Y-m-d'), $period['start']->format('Y-m-d'));
         self::assertSame((new \DateTime())->format('Y-m-d'), $period['end']->format('Y-m-d'));
     }
+
+    public function testTheLastYearIsTheLastTwelveMonths(): void
+    {
+        BestSellers::setConfigValue('date_type', (string) BestSellers::DATE_RANGE);
+        BestSellers::setConfigValue('date_range', BestSellers::LAST_YEAR);
+
+        $period = (new ConfiguredPeriod())->resolve();
+
+        self::assertSame((new \DateTime('-1 year'))->format('Y-m-d'), $period['start']->format('Y-m-d'));
+        self::assertSame((new \DateTime())->format('Y-m-d'), $period['end']->format('Y-m-d'));
+    }
 }

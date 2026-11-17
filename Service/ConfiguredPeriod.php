@@ -55,7 +55,7 @@ final readonly class ConfiguredPeriod
             BestSellers::LAST_6_MONTHS => new \DateTime('-6 months'),
             BestSellers::LAST_3_MONTHS => new \DateTime('-3 months'),
             BestSellers::THIS_YEAR => new \DateTime('first day of January'),
-            BestSellers::LAST_YEAR => new \DateTime('first day of January last year'),
+            BestSellers::LAST_YEAR => new \DateTime('-1 year'),
             default => new \DateTime('1970-01-01'),
         };
     }

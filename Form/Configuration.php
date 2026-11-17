@@ -56,7 +56,7 @@ class Configuration extends BaseForm
                 $translator->trans('Last 30 days', [], BestSellers::DOMAIN_NAME ) => BestSellers::LAST_30_DAYS,
                 $translator->trans('The last 3 months', [], BestSellers::DOMAIN_NAME ) => BestSellers::LAST_3_MONTHS,
                 $translator->trans('The last 6 months', [], BestSellers::DOMAIN_NAME ) => BestSellers::LAST_6_MONTHS,
-                $translator->trans( 'The last year', [], BestSellers::DOMAIN_NAME ) => BestSellers::LAST_YEAR,
+                $translator->trans( 'The last 12 months', [], BestSellers::DOMAIN_NAME ) => BestSellers::LAST_YEAR,
                 $translator->trans('Since the beginning of the year', [], BestSellers::DOMAIN_NAME ) => BestSellers::THIS_YEAR,
             ],
             'required' => true,

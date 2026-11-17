@@ -12,8 +12,8 @@ return array(
     'Purchased with this product' => 'Souvent achetés avec cet article',
     'Sales revenue' => 'Chiffre d\'affaire',
     'Since the beginning of the year' => 'Depuis le début de l\'année',
+    'The last 12 months' => 'Les 12 derniers mois',
     'The last 3 months' => 'Les 3 derniers mois',
     'The last 6 months' => 'Les 6 derniers mois',
-    'The last year' => 'L\'année dernière',
     'Undefined' => 'Non définie',
 );
