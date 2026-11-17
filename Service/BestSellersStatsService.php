@@ -25,6 +25,7 @@ class BestSellersStatsService
 {
     public function __construct(
         private readonly EventDispatcherInterface $dispatcher,
+        private readonly ConfiguredPeriod $configuredPeriod,
     ) {
     }
 
@@ -35,8 +36,6 @@ class BestSellersStatsService
      */
     public function resolvePeriod(?string $startDate = null, ?string $endDate = null): array
     {
-        $dateType = BestSellers::getConfigValue('date_type');
-
         if ($startDate !== null && $endDate !== null) {
             $start = new \DateTime($startDate);
             $start->setTime(0, 0, 0);
@@ -46,25 +45,7 @@ class BestSellersStatsService
             return ['start' => $start, 'end' => $end];
         }
 
-        // No period configured (a fresh install): every sale counts, as the module documents.
-        $start = new \DateTime('1970-01-01');
-        $end = new \DateTime();
-
-        switch ($dateType) {
-            case BestSellers::FIXED_DATE:
-                $startString = BestSellers::getConfigValue('start_date');
-                $endString = BestSellers::getConfigValue('end_date');
-                $start = new \DateTime($startString ?: '1970-01-01');
-                $start->setTime(0, 0, 0);
-                $end = new \DateTime($endString ?: 'now');
-                $end->setTime(23, 59, 59);
-                break;
-            case BestSellers::DATE_RANGE:
-                $start = $this->dateFromRange(BestSellers::getConfigValue('date_range'));
-                break;
-        }
-
-        return ['start' => $start, 'end' => $end];
+        return $this->configuredPeriod->resolve();
     }
 
     /**
@@ -189,18 +170,5 @@ class BestSellersStatsService
         usort($rows, $comparator);
 
         return $rows;
-    }
-
-    private function dateFromRange(?string $dateRange): \DateTime
-    {
-        return match ($dateRange) {
-            BestSellers::LAST_15_DAYS => new \DateTime('-15 days'),
-            BestSellers::LAST_30_DAYS => new \DateTime('-30 days'),
-            BestSellers::LAST_6_MONTHS => new \DateTime('-6 months'),
-            BestSellers::LAST_3_MONTHS => new \DateTime('-3 months'),
-            BestSellers::THIS_YEAR => new \DateTime('first day of January'),
-            BestSellers::LAST_YEAR => new \DateTime('first day of January last year'),
-            default => new \DateTime('1970-01-01'),
-        };
     }
 }

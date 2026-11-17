@@ -20,6 +20,7 @@ namespace BestSellers\Loop;
 
 use BestSellers\BestSellers;
 use BestSellers\EventListeners\BestSellersEvent;
+use BestSellers\Service\ConfiguredPeriod;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Thelia\Core\Template\Element\LoopResultRow;
@@ -89,24 +90,9 @@ class BestSellerLoop extends Product
     {
         $query = parent::buildModelCriteria();
 
-        // No period configured (a fresh install): every sale counts, as the module documents.
-        $startDate = new \DateTime('1970-01-01');
-        $endDate = new \DateTime();
-
-        $dateType = BestSellers::getConfigValue('date_type');
-        $startDateString = BestSellers::getConfigValue('start_date');
-        $endDateString = BestSellers::getConfigValue('end_date');
-
-        switch ($dateType) {
-            case BestSellers::FIXED_DATE:
-                $dates = $this->setFixedDate($startDateString, $endDateString);
-                $startDate = $dates['start_date'];
-                $endDate = $dates['end_date'];
-                break;
-            case BestSellers::DATE_RANGE:
-                $startDate = $this->setDateRange(BestSellers::getConfigValue('date_range'));
-                break;
-        }
+        $period = (new ConfiguredPeriod())->resolve();
+        $startDate = $period['start'];
+        $endDate = $period['end'];
 
         $event = new BestSellersEvent($startDate, $endDate);
 
@@ -226,35 +212,5 @@ class BestSellerLoop extends Product
             ->set('SOLD_QUANTITY', $item->getVirtualColumn('sold_quantity'))
             ->set('SOLD_AMOUNT', $item->getVirtualColumn('sold_amount'))
             ->set('SALE_RATIO', $item->getVirtualColumn('sale_ratio'));
-    }
-
-    private function setFixedDate($startDateString, $endDateString)
-    {
-        $startDate = new \DateTime($startDateString);
-        $startDate->setTime(0, 0, 0);
-        $endDate = new \DateTime($endDateString);
-        $endDate->setTime(23, 59, 59);
-
-        return ['start_date' => $startDate, 'end_date' => $endDate];
-    }
-
-    private function setDateRange($dateRange)
-    {
-        switch ($dateRange) {
-            case BestSellers::LAST_15_DAYS:
-                return new \DateTime('-15 days');
-            case BestSellers::LAST_30_DAYS:
-                return new \DateTime('-30 days');
-            case BestSellers::LAST_6_MONTHS:
-                return new \DateTime('-6 months');
-            case BestSellers::LAST_3_MONTHS:
-                return new \DateTime('-3 months');
-            case BestSellers::THIS_YEAR:
-                return new \DateTime('first day of January');
-            case BestSellers::LAST_YEAR:
-                return new \DateTime('first day of January last year');
-        }
-
-        return new \DateTime('1970-01-01');
     }
 }
