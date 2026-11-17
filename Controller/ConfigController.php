@@ -12,8 +12,8 @@
 
 namespace BestSellers\Controller;
 
-use BestSellers\BestSellers;
 use BestSellers\Form\Configuration;
+use BestSellers\Service\ConfigurationWriter;
 use Symfony\Component\Routing\Attribute\Route;
 use Thelia\Controller\Admin\BaseAdminController;
 use Thelia\Core\Translation\Translator;
@@ -21,6 +21,11 @@ use Thelia\Form\Exception\FormValidationException;
 
 class ConfigController extends BaseAdminController
 {
+    public function __construct(
+        private readonly ConfigurationWriter $configurationWriter,
+    ) {
+    }
+
     #[Route('/admin/module/bestsellers/config', name: 'bestsellers.configuration', methods: ['POST'])]
     public function setAction()
     {
@@ -28,62 +33,15 @@ class ConfigController extends BaseAdminController
 
         try {
             $configForm = $this->validateForm($form);
-            $orderData = $configForm->get('order')->getData();
             $formData = $configForm->all();
-            $startDateForm = $formData['start_date'];
-            $endDateForm = $formData['end_date'];
-            $dateRangeForm = $formData['date_range'];
-            $dateType = $formData['date_type'];
 
-            $date_range = $dateRangeForm->getData();
-            $orderBy = $formData['order_by']->getData();
-            if ($startDate = $startDateForm->getData()) {
-                $startDate = $startDate->format('Y-m-d');
-            }
-            if ($endDate = $endDateForm->getData()) {
-                $endDate = $endDate->format('Y-m-d');
-            }
-
-            $dateType = $dateType->getData();
-
-            if ($startDate !== null) {
-                BestSellers::setConfigValue(
-                    'start_date',
-                    $startDate,
-                );
-            }
-
-            if ($endDate !== null) {
-                BestSellers::setConfigValue(
-                    'end_date',
-                    $endDate,
-                );
-            }
-
-            if ($orderData !== null) {
-                BestSellers::setConfigValue(
-                    'order_types',
-                    $orderData,
-                );
-            }
-
-            if ($date_range !== null) {
-                BestSellers::setConfigValue(
-                    'date_range',
-                    $date_range,
-                );
-            }
-
-            if ($dateType !== null) {
-                BestSellers::setConfigValue(
-                    'date_type',
-                    $dateType,
-                );
-            }
-
-            BestSellers::setConfigValue(
-                'order_by',
-                $orderBy,
+            $this->configurationWriter->save(
+                $configForm->get('order')->getData(),
+                $formData['date_type']->getData(),
+                $formData['start_date']->getData(),
+                $formData['end_date']->getData(),
+                $formData['date_range']->getData(),
+                $formData['order_by']->getData(),
             );
 
             $response = $this->redirectAction();
