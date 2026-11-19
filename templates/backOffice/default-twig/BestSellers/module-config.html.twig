@@ -1,102 +1,84 @@
-{# BestSellers module configuration (hook module.configuration, default-twig BO) #}
-<div class="card mb-3">
+{# BestSellers module configuration (hook module.configuration, default-twig back office) #}
+{# bo_form_themes comes with default-twig 0.4.19: an older back office falls back on the plain Bootstrap 5 theme. #}
+{% form_theme form with (bo_form_themes is defined ? bo_form_themes : ['bootstrap_5_layout.html.twig']) only %}
+{% set domain = 'bestsellers.bo.default' %}
+{% set period_labels = {
+    (constant('BestSellers\\BestSellers::ALL_SALES')): 'All sales',
+    (constant('BestSellers\\BestSellers::DATE_RANGE')): 'Sliding period',
+    (constant('BestSellers\\BestSellers::FIXED_DATE')): 'Fixed dates',
+} %}
+
+<div class="card mb-3 bestsellers-config" data-testid="bestsellers-config">
     <div class="card-header">
-        <h3 class="card-title mb-0">{{ 'Order types and dates'|trans({}, 'bestsellers.bo.default') }}</h3>
+        <h2 class="h5 card-title mb-0">{{ 'Best sellers'|trans({}, domain) }}</h2>
     </div>
     <div class="card-body">
-        {{ form_start(form, {'action': '/admin/module/bestsellers/config', 'method': 'POST', 'attr': {'data-controller': 'bestsellers-config'}}) }}
+        {{ form_start(form, {action: path('bestsellers.configuration'), method: 'POST'}) }}
             {{ form_errors(form) }}
 
-            <div class="mb-3 col-md-4">
-                {{ form_label(form.order) }}
-                {{ form_widget(form.order) }}
-                {{ form_errors(form.order) }}
-                <span class="form-text">
-                    {{ 'Enter the IDs of order status you wish to be taken into account for your bestsellers statistics (eg: 2,3,4)'|trans({}, 'bestsellers.bo.default') }}
-                </span>
-            </div>
+            <fieldset class="mb-4">
+                <legend class="form-label fw-semibold">{{ 'Orders counted'|trans({}, domain) }}</legend>
+                {% for status in form.order_types %}
+                    {% set color = status.vars.attr['data-color'] ?? '' %}
+                    {% set color = color matches '/^#[0-9a-fA-F]{3,8}$/' ? color : '' %}
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="{{ status.vars.id }}" name="{{ status.vars.full_name }}" value="{{ status.vars.value }}"{% if status.vars.checked %} checked{% endif %}>
+                        <label class="form-check-label" for="{{ status.vars.id }}">
+                            <span class="bestsellers-config__status-dot" aria-hidden="true"{% if color %} style="--status-color: {{ color }};"{% endif %}></span>
+                            {{ status.vars.label }}
+                        </label>
+                    </div>
+                    {% do status.setRendered() %}
+                {% endfor %}
+                {{ form_errors(form.order_types) }}
+                <div class="form-text">
+                    {{ 'The orders in the other statuses are left out of the best sellers.'|trans({}, domain) }}
+                    <a href="/admin/configuration/order-status">{{ 'Manage the order statuses'|trans({}, domain) }}</a>
+                </div>
+            </fieldset>
 
-            <div class="mb-3 col-md-4">
-                <label class="form-label" for="{{ form.date_type.vars.id }}">{{ 'Choose a date type : '|trans({}, 'bestsellers.bo.default') }}</label>
-                {{ form_widget(form.date_type, {'attr': {'data-bestsellers-config-target': 'dateType', 'data-action': 'change->bestsellers-config#toggle'}}) }}
+            <fieldset class="mb-4">
+                <legend class="form-label fw-semibold">{{ 'Period'|trans({}, domain) }}</legend>
+                {% for option in form.date_type %}
+                    <div class="form-check bestsellers-config__option">
+                        <input type="radio" class="form-check-input" id="{{ option.vars.id }}" name="{{ option.vars.full_name }}" value="{{ option.vars.value }}"{% if option.vars.checked %} checked{% endif %}>
+                        <label class="form-check-label" for="{{ option.vars.id }}">{{ (period_labels[option.vars.value] ?? option.vars.label)|trans({}, domain) }}</label>
+
+                        {% if option.vars.value == constant('BestSellers\\BestSellers::DATE_RANGE') %}
+                            <div class="bestsellers-config__option-fields">
+                                <label class="visually-hidden" for="{{ form.date_range.vars.id }}">{{ 'Sliding period'|trans({}, domain) }}</label>
+                                {{ form_widget(form.date_range, {attr: {class: 'w-auto'}}) }}
+                                {{ form_errors(form.date_range) }}
+                            </div>
+                        {% elseif option.vars.value == constant('BestSellers\\BestSellers::FIXED_DATE') %}
+                            <div class="bestsellers-config__option-fields">
+                                <label for="{{ form.start_date.vars.id }}">{{ 'from'|trans({}, domain) }}</label>
+                                {{ form_widget(form.start_date, {attr: {class: 'w-auto'}}) }}
+                                <label for="{{ form.end_date.vars.id }}">{{ 'to'|trans({}, domain) }}</label>
+                                {{ form_widget(form.end_date, {attr: {class: 'w-auto'}}) }}
+                                {{ form_errors(form.start_date) }}
+                                {{ form_errors(form.end_date) }}
+                                <div class="form-text w-100 mt-0">{{ 'A fixed date left empty leaves that end of the period open.'|trans({}, domain) }}</div>
+                            </div>
+                        {% endif %}
+                    </div>
+                    {% do option.setRendered() %}
+                {% endfor %}
                 {{ form_errors(form.date_type) }}
-            </div>
+            </fieldset>
 
-            <div class="mb-3 col-md-4" data-bestsellers-config-target="fixedDates">
-                <label class="form-label" for="{{ form.start_date.vars.id }}">{{ 'Choose a start date : '|trans({}, 'bestsellers.bo.default') }}</label>
-                {{ form_widget(form.start_date) }}
-                {{ form_errors(form.start_date) }}
-                <label class="form-label mt-2" for="{{ form.end_date.vars.id }}">{{ 'Choose an end date : '|trans({}, 'bestsellers.bo.default') }}</label>
-                {{ form_widget(form.end_date) }}
-                {{ form_errors(form.end_date) }}
-            </div>
-
-            <div class="mb-3 col-md-4" data-bestsellers-config-target="dateRange">
-                <label class="form-label" for="{{ form.date_range.vars.id }}">{{ 'Choose a date range : '|trans({}, 'bestsellers.bo.default') }}</label>
-                {{ form_widget(form.date_range) }}
-                {{ form_errors(form.date_range) }}
-            </div>
-
-            <div class="mb-3 col-md-4">
-                <label class="form-label" for="{{ form.order_by.vars.id }}">{{ 'Order by'|trans({}, 'bestsellers.bo.default') }}</label>
-                {{ form_widget(form.order_by) }}
+            <div class="mb-3">
+                <label class="form-label fw-semibold" for="{{ form.order_by.vars.id }}">{{ 'Ranking'|trans({}, domain) }}</label>
+                {{ form_widget(form.order_by, {attr: {class: 'w-auto'}}) }}
                 {{ form_errors(form.order_by) }}
+                <div class="form-text">{{ 'Number of sales or sales revenue apply wherever the site shows the best sellers.'|trans({}, domain) }}</div>
             </div>
 
-            <button type="submit" class="btn btn-primary">{{ 'Set'|trans({}, 'bestsellers.bo.default') }}</button>
+            {{ component('BoSaveModeToolbar', {
+                showSaveClose: false,
+                saveVariant: 'primary',
+                testid: 'bestsellers-config',
+            }) }}
         {{ form_end(form) }}
-
-        <hr>
-
-        {% set table_rows = [] %}
-        {% for status in order_statuses %}
-            {% set status_url = '/admin/configuration/order-status/update/' ~ status.id %}
-            {% set table_rows = table_rows|merge([{
-                'id':       '<a href="' ~ status_url ~ '">' ~ status.id|e ~ '</a>',
-                'code':     '<a href="' ~ status_url ~ '">' ~ status.code|e ~ '</a>',
-                'title':    '<a class="badge text-decoration-none" style="background-color: ' ~ (status.color ? status.color : '#f0ad4e')|e ~ ';" href="' ~ status_url ~ '">' ~ status.title|e ~ '</a>',
-                'orders':   '<a href="/admin/orders?status=' ~ status.id|e ~ '">' ~ status.orders|e ~ '</a>',
-                'position': status.position,
-            }]) %}
-        {% endfor %}
-
-        {{ component('BoDataTable', {
-            id: 'order-statuses',
-            caption: 'Order status'|trans({}, 'bestsellers.bo.default'),
-            columns: [
-                column_html('id',       'Id'|trans({}, 'bestsellers.bo.default')),
-                column_html('code',     'Code'|trans({}, 'bestsellers.bo.default')),
-                column_html('title',    'Title'|trans({}, 'bestsellers.bo.default')),
-                column_html('orders',   'Orders'|trans({}, 'bestsellers.bo.default')),
-                column_text('position', 'Position'|trans({}, 'bestsellers.bo.default')),
-            ],
-            rows: table_rows,
-            emptyMessage: 'No order status defined.'|trans({}, 'bestsellers.bo.default'),
-        }) }}
     </div>
 </div>
-
-<script>
-    (function () {
-        const root = document.querySelector('[data-controller="bestsellers-config"]');
-        if (!root) {
-            return;
-        }
-        const dateType = root.querySelector('[data-bestsellers-config-target="dateType"]');
-        const fixedDates = root.querySelector('[data-bestsellers-config-target="fixedDates"]');
-        const dateRange = root.querySelector('[data-bestsellers-config-target="dateRange"]');
-
-        function toggle() {
-            if (fixedDates) { fixedDates.style.display = 'none'; }
-            if (dateRange) { dateRange.style.display = 'none'; }
-            if (dateType.value === '2' && dateRange) {
-                dateRange.style.display = 'block';
-            } else if (dateType.value === '1' && fixedDates) {
-                fixedDates.style.display = 'block';
-            }
-        }
-
-        dateType.addEventListener('change', toggle);
-        toggle();
-    })();
-</script>

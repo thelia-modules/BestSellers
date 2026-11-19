@@ -51,10 +51,17 @@ class EventManager extends BaseAction implements EventSubscriberInterface
 
     public function calculateBestSellers(BestSellersEvent $event): void
     {
+        $rawStatusList = BestSellers::getConfigValue('order_types');
+        $statusIntegers = array_filter(array_map('intval', explode(',', (string) $rawStatusList)));
+        sort($statusIntegers);
+        $statusList = $statusIntegers ? implode(',', $statusIntegers) : '2,3,4';
+
+        // The counted statuses are part of the key: changing them must not serve the figures of the former ones.
         $cacheKey = sprintf(
-            'best_sellers_%s_%s',
+            'best_sellers_%s_%s_%s',
             $event->getStartDate()->format('Y-m-d'),
-            $event->getEndDate()->format('Y-m-d')
+            $event->getEndDate()->format('Y-m-d'),
+            str_replace(',', '-', $statusList)
         );
 
         try {
@@ -63,10 +70,6 @@ class EventManager extends BaseAction implements EventSubscriberInterface
             if (!$cacheItem->isHit()) {
                 /** @var PdoConnection $con */
                 $con = Propel::getConnection();
-
-                $rawStatusList = BestSellers::getConfigValue('order_types');
-                $statusIntegers = array_filter(array_map('intval', explode(',', (string) $rawStatusList)));
-                $statusList = $statusIntegers ? implode(',', $statusIntegers) : '2,3,4';
 
                 $query = '
                     SELECT

@@ -25,6 +25,14 @@ Finally, the total number of sales of a product appears on the product sheet.
 
 Update 1.2.0 : You can now choose which order statuses are taken into account to calculate your best sellers. A configuration page has been added to the module. Access it from the modules page.
 
+## Configuration
+
+The configuration page, opened from the modules page, sets:
+
+- the order statuses whose orders are counted;
+- the period: all sales (the default), a sliding period (the last 15 or 30 days, 3, 6 or 12 months, or since the first of January), or fixed dates, an empty one leaving that end of the period open;
+- the ranking: set by the `order` parameter of the loop, or by the number of sales or the sales revenue, whatever the loop asks.
+
 ## Hook
 
 This module shows the 4 best sales of your shop on the front page via the `home.body` hook, and products
@@ -148,6 +156,14 @@ Dans le back-office, vous pouvez voir vos meilleures ventes dans le menu "Outil"
 Enfin, le nombre de ventes total d'un produit apparaît sur la fiche produit.
 
 Update 1.2.0 : Le module permet désormais de choisir quels status de commande utiliser pour calculer vos best sellers. Une page de configuration à été ajoutée, accessible depuis la page "modules".
+
+## Configuration
+
+La page de configuration, ouverte depuis la page des modules, règle :
+
+- les statuts de commande dont les commandes sont comptées ;
+- la période : toutes les ventes (par défaut), une période glissante (les 15 ou 30 derniers jours, les 3, 6 ou 12 derniers mois, ou depuis le 1er janvier) ou des dates fixes, une date vide laissant la période ouverte de ce côté ;
+- le classement : selon le paramètre `order` de la boucle, ou par nombre de ventes ou chiffre d'affaires, quoi que demande la boucle.
 
 ## Hook
 
